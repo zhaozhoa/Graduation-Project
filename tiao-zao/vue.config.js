@@ -19,10 +19,8 @@ module.exports = {
   },
   // devServer: {
   //   proxy: {
-  //     // http://192.168.20.15:8081/
-  //     // 'http://192.168.20.103:8081/'  // 大师
   //     '/api': {
-  //       target: 'http://192.168.20.103:8081/',
+  //       target: 'http://localhost:3000',
   //       changeOrigin: true,
   //       ws: true,
   //       pathRewrite: {
