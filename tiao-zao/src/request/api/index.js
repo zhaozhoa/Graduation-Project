@@ -10,6 +10,7 @@ import needBuy from './needBuy';
 import homeApi from './home'
 
 import productsApi from './product'
+import userApi from './user'
 
 
 
@@ -17,5 +18,6 @@ import productsApi from './product'
 export default {
   needBuy,
   homeApi,
-  productsApi
+  productsApi,
+  userApi
 }
