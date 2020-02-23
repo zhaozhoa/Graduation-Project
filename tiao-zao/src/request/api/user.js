@@ -6,8 +6,8 @@ function axiosGet(url, params) {
   return axios({
    method: 'get',
      url: `${base.sq}/users/${url}`,
-     data: qs.stringify(params),
-     withCredentials: true
+     params: params,
+     withCredentials:true
   })
 }
 
@@ -46,6 +46,10 @@ const userApi = {
   },
   resetPassword(params) {
     return axiosPost('resetPassword', params)
+  },
+  // 获取用户头像和昵称
+  getUserData(params) {
+    return axiosPost('userdata', params)
   }
 }
 
