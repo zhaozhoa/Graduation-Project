@@ -19,7 +19,7 @@ module.exports = option => {
       } catch (error) {
         console.log(error);
         
-        res.status(402).json({
+        res.status(403).json({
           code: 1,
           msg: '登陆失效，请重新登陆'
         })
