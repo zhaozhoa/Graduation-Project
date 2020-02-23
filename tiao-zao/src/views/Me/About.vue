@@ -10,32 +10,66 @@
           class="avatarImg"
           round
         >
-          <template v-slot:error>暂无头像</template>
+          <template v-slot:error>
+            暂无头像
+          </template>
         </van-image>
       </div>
-      <p class="name">{{userData.USERNAME}}</p>
-      <p class="companyName">{{company?company.COMPANY_NAME_ZH:''}}</p>
+      <p class="name">
+        {{ userData.USERNAME }}
+      </p>
+      <p class="companyName">
+        {{ company?company.COMPANY_NAME_ZH:'' }}
+      </p>
     </header>
     <div class="list">
-      <div class="listItem" @click="go('myProduct')">
-        <van-icon name="bag" color="#2885ff" class="icon" />
+      <div
+        class="listItem"
+        @click="go('myProduct')"
+      >
+        <van-icon
+          name="bag"
+          color="#2885ff"
+          class="icon"
+        />
         <span>我的产品</span>
       </div>
-      <div class="listItem" @click="go('myCart')">
-        <van-icon name="shopping-cart" color="#39c6b7" class="icon" />
+      <div
+        class="listItem"
+        @click="go('myCart')"
+      >
+        <van-icon
+          name="shopping-cart"
+          color="#39c6b7"
+          class="icon"
+        />
         <span>我的购物车</span>
       </div>
-      <div class="listItem" @click="go('myTradeInfo')">
-        <van-icon name="balance-list" color="#f7ab27" class="icon" />
+      <div
+        class="listItem"
+        @click="go('myTradeInfo')"
+      >
+        <van-icon
+          name="balance-list"
+          color="#f7ab27"
+          class="icon"
+        />
         <span>我的贸易信息</span>
       </div>
-      <div class="listItem" @click="go('setting')">
-        <van-icon name="setting
-" color="#f54139" class="icon" />
-        <span >设置</span>
+      <div
+        class="listItem"
+        @click="go('setting')"
+      >
+        <van-icon
+          name="setting
+"
+          color="#f54139"
+          class="icon"
+        />
+        <span>设置</span>
       </div>
     </div>
-    <TabBar></TabBar>
+    <TabBar />
   </div>
 </template>
 
@@ -44,16 +78,16 @@ import qs from 'qs'
 import { Image, Icon } from "vant";
 export default {
   name: "Me",
+
+  components: {
+    [Image.name]: Image,
+    [Icon.name]: Icon
+  },
   data() {
     return {
       logo: '',
       company: ''
     };
-  },
-
-  components: {
-    [Image.name]: Image,
-    [Icon.name]: Icon
   },
 
   computed: {

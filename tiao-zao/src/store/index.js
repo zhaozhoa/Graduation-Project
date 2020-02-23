@@ -20,7 +20,8 @@ export default new Vuex.Store({
     categoriesId:'',
     exhibitionData: '',
     // 经贸活动中活动报名
-    tempObject: '', //获取经贸活动报名数据对象
+    tempObject: '', //获取经贸活动报名数据对象,
+    islogin: false
   },
   mutations: {
     changeCompany(state,nowData) {
@@ -47,9 +48,10 @@ export default new Vuex.Store({
     changeExhibition(state, exhibitionData) {
       state.exhibitionData = exhibitionData
     },
-    changeTempObject(state, tempObject) {
-      state.tempObject = tempObject
-    }
+    islogin(state, islogin) {
+      state.islogin = islogin
+    },
+    
   },
   actions: {
   },

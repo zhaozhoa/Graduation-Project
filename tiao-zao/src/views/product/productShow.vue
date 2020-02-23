@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import qs from "qs";
 import { Search, Image, List, Icon, Tab, Tabs } from "vant";
 export default {
   name: "ProductShow",
@@ -165,7 +164,7 @@ export default {
 
           this.currentPage++;
         }
-        this.productData.forEach((item, index) => {
+        this.productData.forEach((item) => {
           if (item.IMAGE_PATH.indexOf("http:") == -1) {
             item.IMAGE_PATH = this.httpurl + item.IMAGE_PATH;
           }

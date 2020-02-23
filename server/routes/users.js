@@ -163,7 +163,7 @@ router.post('/checkPhoneVerification', async (req, res) => {
       data: ''
     })
   } else {
-    res.json({
+    res.status(422).json({
       code: 1,
       msg: '验证码错误',
       data: ''
@@ -188,7 +188,7 @@ router.post('/resetPassword', async (req, res) => {
     }
     
   } catch (error) {
-    res.json({
+    res.status(500).json({
       code: '-1',
       msg: '服务器繁忙，请稍后重试'
     })
