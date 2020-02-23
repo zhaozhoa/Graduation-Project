@@ -5,7 +5,7 @@ import store from './store'
 import axios from 'axios'
 import Storage from 'vue-ls';
 import api from './request/api'
-// import './mock'
+import './mock'
 
 
 
