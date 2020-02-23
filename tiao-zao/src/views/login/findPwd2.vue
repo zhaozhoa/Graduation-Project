@@ -1,8 +1,18 @@
 <template>
   <div class="findPwd1 resetbg">
-    <img src="./../../assets/login/title.png" alt class="titlePic" />
-    <p class="title">忘记密码</p>
-    <img src="./../../assets/login/line.png" alt class="icon" />
+    <img
+      src="./../../assets/login/title.png"
+      alt
+      class="titlePic"
+    >
+    <p class="title">
+      忘记密码
+    </p>
+    <img
+      src="./../../assets/login/line.png"
+      alt
+      class="icon"
+    >
 
     <van-cell-group>
       <van-cell-group>
@@ -17,29 +27,31 @@
         />
         <van-field 
           v-model="sms" 
-          center clearable label="短信验证码" 
+          center
+          clearable
+          label="短信验证码" 
           placeholder="请输入短信验证码"
         >
           <van-button
+            v-if="!timeShow"
             slot="button"
             size="small"
             type="primary"
-            @click="sendCode"
             :disabled="isSend"
-            v-if="!timeShow"
+            @click="sendCode"
           >
-           发送验证码
+            发送验证码
           </van-button>
 
           <van-button
+            v-if="timeShow"
             slot="button"
             size="small"
             type="primary"
-            @click="sendCode"
             :disabled="true"
-            v-if="timeShow"
+            @click="sendCode"
           >
-           <van-count-down 
+            <van-count-down 
               :time="time" 
               format="ss 秒"
               class="time"
@@ -52,18 +64,27 @@
       type="primary"
       size="large"
       class="btn"
-      @click="next"
       :disabled="isClick"
       color="linear-gradient(to right, #4bb0ff, #6149f6)"
-    >下一步</van-button>
+      @click="next"
+    >
+      下一步
+    </van-button>
   </div>
 </template>
 
 <script>
-import qs from "qs";
 import { Field, Button, Cell, CellGroup, CountDown  } from "vant";
 export default {
   name: "FindPwd2",
+
+  components: {
+    [Field.name]: Field,
+    [Button.name]: Button,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [CountDown .name]: CountDown 
+  },
   data() {
     return {
       // 获取上一步传入的用户名和手机号
@@ -82,14 +103,6 @@ export default {
     };
   },
 
-  components: {
-    [Field.name]: Field,
-    [Button.name]: Button,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [CountDown .name]: CountDown 
-  },
-
   computed: {
     uData() {
       return this.$store.state.uData
@@ -102,7 +115,8 @@ export default {
 
   methods: {
     checkPhone() {
-      if (this.phone !== this.params.PHONE) {
+      
+      if (parseInt(this.phone) !== this.params.phone) {
         this.phoneTips = "您输入的手机号不是您预留的手机号";
       } else {
         this.isSend = false
@@ -111,13 +125,14 @@ export default {
     },
     async sendCode() {
       try {
-        let { data: res } = await this.axios.post(
-          this.httpurl+"/miniProIndex/sendMSG",
-          qs.stringify({
-            PHONE: this.phone
-          })
+        let { data: res } = await this.$api.userApi.getPhoneVerification(
+          {
+            phone: this.phone
+          }
         );
         this.receiveCode = res.data
+        console.log(this.receiveCode);
+        
         this.$toast.success('验证码已经发送，30分钟内有效')
         this.isSend = true
         this.timeShow= true
@@ -138,20 +153,19 @@ export default {
       }
     },
     async next() {
-
       if (this.sms === '') {
         this.$toast('请输入验证码')
         return
       }
-
-      let {data: res} = await this.axios.post(this.httpurl+'/miniProIndex/checkCode',qs.stringify({
-        PHONE:this.phone,
-        CODE: this.sms
-      }))
-      if (res.code === '0') {
-         this.$router.push({ name: "findPwd3" });
-      } else {
-        this.$toast('输入的验证码有误')
+      try {
+        await this.$api.userApi.checkPhoneVerification({
+          phone:this.phone,
+          code: this.sms
+        })
+        this.$router.push({ name: "findPwd3" });
+        
+      } catch (err) {
+        return
       }
     }
   }
