@@ -1,8 +1,18 @@
 <template>
   <div class="findPwd1 resetbg">
-    <img src="./../../assets/login/title.png" alt class="titlePic" />
-    <p class="title">忘记密码</p>
-    <img src="./../../assets/login/line.png" alt class="icon" />
+    <img
+      src="./../../assets/login/title.png"
+      alt
+      class="titlePic"
+    >
+    <p class="title">
+      忘记密码
+    </p>
+    <img
+      src="./../../assets/login/line.png"
+      alt
+      class="icon"
+    >
     <van-cell-group>
       <van-field
         v-model="username"
@@ -18,31 +28,32 @@
       type="primary"
       size="large"
       class="btn"
-      @click="next"
       :disabled="isClick"
       color="linear-gradient(to right, #4bb0ff, #6149f6)"
-    >下一步</van-button>
+      @click="next"
+    >
+      下一步
+    </van-button>
   </div>
 </template>
 
 <script>
-import qs from "qs";
 import { Field, Button, Cell, CellGroup } from "vant";
 export default {
   name: "FindPwd1",
-  data() {
-    return {
-      username: "",
-      usernameTips: "",
-      isClick: true
-    };
-  },
 
   components: {
     [Field.name]: Field,
     [Button.name]: Button,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup
+  },
+  data() {
+    return {
+      username: "",
+      usernameTips: "",
+      isClick: true
+    };
   },
 
   computed: {},
@@ -61,9 +72,9 @@ export default {
       }
     },
     async next() {
-      let {data:res} = await this.axios.post(this.httpurl+'/miniProIndex/getUSER', qs.stringify({USERNAME: this.username}) )
+      let {data:res} = await this.$api.userApi.hasUserName({userName: this.username}) 
 
-      if (res.data == null) {
+      if (res.code == 0) {
         this.usernameTips = '该用户不存在'
       } else {
         this.$store.commit('changeUData', res.data)
