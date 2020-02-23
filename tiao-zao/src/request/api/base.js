@@ -2,7 +2,7 @@
  * 接口域名的管理
  */
 const base = {
-  sq: 'http://localhost:3000',
+  sq: '/api',
   bd: 'http://xxxxx22222.com/api'
 }
 
