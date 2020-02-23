@@ -12,7 +12,7 @@ import './mock'
 
 
 let options = {
-  namespace: 'vuejs__', // key prefix
+  namespace: '', // key prefix
   name: 'ls', // name variable Vue.[ls] or this.[$ls],
   storage: 'session', // storage name session, local, memory
 };
