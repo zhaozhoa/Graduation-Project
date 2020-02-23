@@ -1,8 +1,18 @@
 <template>
   <div class="findPwd1 resetbg">
-    <img src="./../../assets/login/title.png" alt class="titlePic" />
-    <p class="title">重置密码</p>
-    <img src="./../../assets/login/line.png" alt class="icon" />
+    <img
+      src="./../../assets/login/title.png"
+      alt
+      class="titlePic"
+    >
+    <p class="title">
+      重置密码
+    </p>
+    <img
+      src="./../../assets/login/line.png"
+      alt
+      class="icon"
+    >
     <van-cell-group>
       <van-field
         v-model="password"
@@ -29,18 +39,26 @@
       type="primary"
       size="large"
       class="btn"
-      @click="next"
       :disabled="isClick"
       color="linear-gradient(to right, #4bb0ff, #6149f6)"
-    >下一步</van-button>
+      @click="next"
+    >
+      下一步
+    </van-button>
   </div>
 </template>
 
 <script>
-import qs from 'qs'
 import { Field, Button, Cell, CellGroup } from "vant";
 export default {
   name: "FindPwd1",
+
+  components: {
+    [Field.name]: Field,
+    [Button.name]: Button,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup
+  },
   data() {
     return {
       password: "",
@@ -49,13 +67,6 @@ export default {
       password2Tips: "",
       isClick: true
     };
-  },
-
-  components: {
-    [Field.name]: Field,
-    [Button.name]: Button,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup
   },
 
   computed: {
@@ -85,16 +96,18 @@ export default {
       }
     },
     async next() {
-      let {data: res} = await this.axios.post(this.httpurl+'/miniProIndex/updatePWD', qs.stringify({
-        PHONE: this.uData.PHONE,
-        PWD: this.md5(this.password),
-        USERNAME: this.uData.USERNAME
-      }))
+      try {
+         let {data: res} = await this.$api.userApi.resetPassword({
+        phone: this.uData.phone,
+        password: this.md5(this.password),
+        userName: this.uData.userName
+      })
 
-      if (res.code === '0') {
+      if (res.code === 0) {
         this.$router.push({ name: "findPwd4" });
-      } else {
-        this.$toast.fail('修改失败')
+      }
+      } catch (error) {
+        return
       }
     }
   }

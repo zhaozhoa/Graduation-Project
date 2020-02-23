@@ -1,8 +1,21 @@
 <template>
   <div class="regSuc resetbg">
-    <van-icon name="checked" size="1.17rem" color="#41c87f" class="icon" />
-    <p class="info">密码已经重置</p>
-    <van-button color="linear-gradient(to right, #4bb0ff, #6149f6)" class="btn" @click="toLogin">去登录</van-button>
+    <van-icon
+      name="checked"
+      size="1.17rem"
+      color="#41c87f"
+      class="icon"
+    />
+    <p class="info">
+      密码已经重置
+    </p>
+    <van-button
+      color="linear-gradient(to right, #4bb0ff, #6149f6)"
+      class="btn"
+      @click="toLogin"
+    >
+      去登录
+    </van-button>
   </div>
 </template>
 
@@ -10,13 +23,13 @@
 import { Button, Icon } from "vant";
 export default {
   name: "",
-  data() {
-    return {};
-  },
 
   components: {
     [Button.name]: Button,
     [Icon.name]: Icon
+  },
+  data() {
+    return {};
   },
 
   computed: {},
@@ -25,7 +38,7 @@ export default {
 
   methods: {
     toLogin() {
-      this.$router.push({name:'login'})
+      this.$router.replace({name:'login'})
     }
   }
 };

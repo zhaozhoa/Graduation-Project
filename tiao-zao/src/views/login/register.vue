@@ -25,6 +25,15 @@
         @blur="checkUserName"
       />
       <van-field
+        v-model="nickname"
+        label="昵称"
+        placeholder="请输入昵称"
+        required
+        :error-message="nicknameTips"
+        label-width="70px"
+        @blur="checkNickName"
+      />
+      <van-field
         v-model="password"
         type="password"
         label="密码"
@@ -81,10 +90,12 @@ export default {
   data() {
     return {
       username: "",
+      nickname: '',
       password: "",
       password2: "",
       phone: "",
       usernameTips: "",
+      nicknameTips: '',
       passwordTips: "",
       password2Tips: "",
       phoneTips: "",
@@ -117,6 +128,18 @@ export default {
         }
       }
     },
+    checkNickName(){
+      
+      if (this.nickname.length>8) {
+        this.nicknameTips = '昵称不能超过8个字符'
+        return
+      }
+      if (this.nickname.length === 0) {
+        this.nicknameTips = '昵称为必填项'
+        return
+      }
+      this.nicknameTips = ''
+    },
     checkPsw1() {
       if (!/^(?![a-z]+$)(?![0-9]+$)[a-zA-Z0-9]{5,20}$/.test(this.password)) {
         this.passwordTips = "请输入5~20个字符，包含字母和数字！";
@@ -146,6 +169,8 @@ export default {
       if (
         this.usernameTips == "" &&
         this.username !== "" &&
+        this.nicknameTips == "" &&
+        this.nickname !== "" &&
         this.passwordTips == "" &&
         this.password !== "" &&
         this.password2Tips == "" &&
@@ -160,7 +185,7 @@ export default {
             userName: this.username,
             password: this.md5((this.password)),
             phone: this.phone,
-            TYPE: 2
+            nickName:this.nickname,
           }
         );
         if (res.code == 0) {
