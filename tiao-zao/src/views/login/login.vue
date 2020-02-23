@@ -96,12 +96,16 @@ export default {
   computed: {},
 
   async mounted() {
-    this.pic =(await this.$api.userApi.getVerificationPic()).data.img
+    this.changePic()
   },
 
   methods: {
     async changePic() {
-      this.pic = (await this.$api.userApi.getVerificationPic()).data.img
+      try {
+        this.pic = (await this.$api.userApi.getVerificationPic()).data.img
+      } catch (error) {
+        console.log(error);
+      }
     },
     checkUserName() {
       if (!/^[a-zA-Z0-9]{5,20}$/.test(this.username)) {
@@ -147,11 +151,15 @@ export default {
             }
           );
           if (data.code === 0) {
+          // 登陆成功 保存token
+          this.$ls.set('token',data.data.token,1000*60*60)
           // 将用户信息存到 vuex
-          
           this.$ls.set('user', data.data,20 * 60 * 1000)
           this.$store.commit("changeUserData", data.data);
+          this.$toast('登陆成功')
+          setTimeout(() => {
           this.$router.push({name:'home'});
+          }, 1000);
         }
         } catch (error) {
           this.changePic()
