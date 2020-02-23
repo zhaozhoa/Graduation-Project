@@ -1,9 +1,12 @@
 const express = require('express')
+const path = require('path');
 //引入 数据库 Schema
 const User = require('../models/user')
 const md5 = require('blueimp-md5')
 const router = express.Router()
 const svgCaptcha = require('svg-captcha');
+const multer = require('multer')
+// const upload = multer({dest: __dirname + '../uploads'})
 
 
 // 检查注册的用户名是否已经存在
@@ -42,18 +45,18 @@ router.post('/hasUserName', async (req, res) => {
   
 })
 
-
-
 router.post('/register', async (req, res) => {
   let {
     userName,
     password,
-    phone
+    phone,
+    nickName
   } = req.body
   let user = new User ({
     userName,
     password: md5(password),
-    phone
+    phone,
+    nickName
   })
   try {
     let result = await user.save()
@@ -63,7 +66,7 @@ router.post('/register', async (req, res) => {
         msg: 'ok'
       })
     }else {
-      res.json({
+      res.status(500).json({
         code:1,
         msg:'error'
       })
@@ -97,12 +100,16 @@ router.get('/verificationPic', (req, res) => {
      img: captcha.data
    }
    res.json(codeData);
+   console.log(req.session.captcha);
+   
 })
 
 router.post('/login',  async (req, res) => {
   let {userName, password, code} = req.body
+  console.log(code, req.session.captcha);
+  
   if(req.session.captcha !== code.toLowerCase()) {
-    res.json({
+    res.status(422).json({
       code: 2,
       msg: '验证码有误'
     })
@@ -111,14 +118,14 @@ router.post('/login',  async (req, res) => {
   let data = await User.findOne({userName})
   
   if (!data) {
-    res.json({
+    res.res.status(422).json({
       code:1,
       msg: '用户名和密码不匹配'
     })
     return
   }
   if (data.password !== md5(password)) {
-    res.json({
+    res.status(422).json({
       code: 1,
       msg: '用户名和密码不匹配'
     })
@@ -132,6 +139,7 @@ router.post('/login',  async (req, res) => {
       phone: data.phone
     }
   })
+  // session 保存用户信息
   req.session.user = userName
   
 })
@@ -165,7 +173,39 @@ router.post('/checkPhoneVerification', async (req, res) => {
 
 // 修改密码
 router.post('/resetPassword', async (req, res) => {
+  let {userName, password} = req.body
+  console.log(userName,password);
   
+  try {
+    let result = await User.updateOne({userName}, {password:md5(password)})
+    console.log(result);
+    if (result) {
+      res.json({
+        code:0,
+        msg: 'ok',
+        data: ''
+      })
+    }
+    
+  } catch (error) {
+    res.json({
+      code: '-1',
+      msg: '服务器繁忙，请稍后重试'
+    })
+  }
+
 })
+
+// 获取用户上传头像和昵称
+router.post('/getUserData', async (req, res) => {
+  if (condition) {
+    
+  }
+})
+
+// // 上传用户头像
+// router.post('/uploadUserData', upload.single('file'), async (req, res) => {
+
+// })
 
 module.exports = router
