@@ -5,9 +5,23 @@ const User = require('../models/user')
 const md5 = require('blueimp-md5')
 const router = express.Router()
 const svgCaptcha = require('svg-captcha');
+const jwt = require('jsonwebtoken')
 const multer = require('multer')
-// const upload = multer({dest: __dirname + '../uploads'})
+const fs = require('fs')
+const assert = require('http-assert')
+const decodeJwt = require('../middleware/decodeJwt')
+// const upload = multer({dest: __dirname + '../uploads'})// 读取 token 签名
+// 读取取token的加密文件
 
+let secret
+fs.readFile(__dirname + '../../.secret', (err, data) => {
+  if (err) {
+    console.log(err);
+    return
+  } else {
+    secret = data.toString()
+  }
+})
 
 // 检查注册的用户名是否已经存在
 router.post('/hasUserName', async (req, res) => {
@@ -106,8 +120,6 @@ router.get('/verificationPic', (req, res) => {
 
 router.post('/login',  async (req, res) => {
   let {userName, password, code} = req.body
-  console.log(code, req.session.captcha);
-  
   if(req.session.captcha !== code.toLowerCase()) {
     res.status(422).json({
       code: 2,
@@ -131,12 +143,19 @@ router.post('/login',  async (req, res) => {
     })
     return
   }
+  // 生成token 签名
+  const token = jwt.sign({
+    _id: data._id
+  }, secret, {
+    expiresIn: '1h'
+  })
   res.json({
     code: 0,
     msg: 'ok',
     data: {
       userName,
-      phone: data.phone
+      phone: data.phone,
+      token
     }
   })
   // session 保存用户信息
@@ -197,10 +216,8 @@ router.post('/resetPassword', async (req, res) => {
 })
 
 // 获取用户上传头像和昵称
-router.post('/getUserData', async (req, res) => {
-  if (condition) {
-    
-  }
+router.post('/getUserData',decodeJwt(), async (req, res) => {
+  res.send('获取用户头像')
 })
 
 // // 上传用户头像
