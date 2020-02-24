@@ -4,10 +4,10 @@ import qs from 'qs'
 
 function axiosGet(url, params) {
   return axios({
-   method: 'get',
-     url: `${base.sq}/users/${url}`,
-     params: params,
-     withCredentials:true
+    method: 'get',
+    url: `${base.sq}/users/${url}`,
+    params: params,
+    withCredentials:true
   })
 }
 
@@ -17,6 +17,17 @@ function axiosPost(url, params) {
     url: `${base.sq}/users/${url}`,
     data: qs.stringify(params),
     withCredentials: true
+  })
+}
+function axiosPostUpload(url, params) {
+  return axios({
+    method: 'post',
+    url: `${base.sq}/users/${url}`,
+    data: params,
+    withCredentials: true,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   })
 }
 
@@ -47,10 +58,18 @@ const userApi = {
   resetPassword(params) {
     return axiosPost('resetPassword', params)
   },
-  // 获取用户头像和昵称
-  getUserData(params) {
-    return axiosPost('userdata', params)
+  // 获取用户信息
+  getUserData() {
+    return axiosPost('getUserData')
+  },
+  // 用户上传头像
+  uploadAvatar(params) {
+    console.log(params);
+    
+    return axiosPostUpload('uploadAvatar', params)
   }
+
+
 }
 
 export default userApi
