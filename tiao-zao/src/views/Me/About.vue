@@ -3,7 +3,7 @@
     <header>
       <div class="avatar">
         <van-image
-          :src="logo"
+          :src="avatar"
           width="1.7rem"
           height="1.7rem"
           fit="cover"
@@ -16,10 +16,10 @@
         </van-image>
       </div>
       <p class="name">
-        {{ userData.USERNAME }}
+        {{ nickname }}
       </p>
-      <p class="companyName">
-        {{ company?company.COMPANY_NAME_ZH:'' }}
+      <p class="account">
+        {{ account }}
       </p>
     </header>
     <div class="list">
@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import qs from 'qs'
 import { Image, Icon } from "vant";
 export default {
   name: "Me",
@@ -85,8 +84,10 @@ export default {
   },
   data() {
     return {
-      logo: '',
-      company: ''
+      avatar: this.$ls.get('user').avatar,
+      company: '',
+      nickname: this.$ls.get('user').nickName,
+      account: this.$ls.get('user').account,
     };
   },
 
@@ -96,29 +97,13 @@ export default {
     }
   },
 
-  mounted() {
-    this.getCompany()
-  },
+  mounted() {},
 
   methods: {
     go(router) {
       this.$router.push({
         name: router
       })
-    },
-    async getCompany() {
-      let {data:res} = await this.axios.post(this.httpurl+'/miniProIndex/getEnterpriseByID', qs.stringify({
-        // this.$ls.get('user').USER_ID
-        // '403217e3c7c34137a5cf081297eee4a5'
-        ENTERPRISE_ID: this.$ls.get('user').USER_ID
-      }))
-      this.company = res.data
-      if(res.data) {
-        this.$store.commit('changeLoginCompany', res.data);
-        this.logo = this.httpurl+"/" + (this.company.COMPANY_LOGO).split('@;@')[0];
-      }
-
-
     }
   }
 };
