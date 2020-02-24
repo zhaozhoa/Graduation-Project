@@ -10,22 +10,22 @@ import './mock'
 
 
 
-
+// 配置ls
 let options = {
   namespace: '', // key prefix
   name: 'ls', // name variable Vue.[ls] or this.[$ls],
   storage: 'session', // storage name session, local, memory
 };
+
 Vue.use(Storage, options)
+
 import "amfe-flexible";
-// import './mock/index'
 import md5 from 'js-md5'
 Vue.prototype.md5 = md5
 import TabBar from './components/tabBar.vue'
 import '../src/assets/reset.css'
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.withCredentials = true;
+
 Vue.prototype.axios = axios
 Vue.prototype.httpurl = 'http://tzmy.beijiait.com:8099/tradepromo-service/'
 // Vue.prototype.httpurl = 'http://localhost:8081/'
