@@ -7,7 +7,7 @@ let userSchema = new Schema({
     type: Number,
     required: true
   },
-  userName: {
+  account: {
     type: String,
     required: true
   },
@@ -18,6 +18,9 @@ let userSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  avatar: {
+    type: String
   },
   createdTime: {
     type: Date,
