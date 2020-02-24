@@ -1,61 +1,79 @@
 <template>
   <div class="Setting">
-    <p class="title">设置</p>
-    <img src="./../../assets/login/line.png" alt class="iconSetting" />
+    <p class="title">
+      设置
+    </p>
+    <img
+      src="./../../assets/login/line.png"
+      alt
+      class="iconSetting"
+    >
     <div class="itemList">
       <div class="item">
         <p>头像</p>
-        <van-image
-          :src="this.httpurl+ loginCompany.COMPANY_LOGO"
-          width="1.7rem"
-          height="1.7rem"
-          fit="cover"
-          class="avatarImg"
-          round
+        <van-uploader
+          :after-read="afterRead"
+          result-type="file"
         >
-          <template v-slot:error>暂无头像</template>
-        </van-image>
+          <van-image
+            :src="user.avatar"
+            width="1.7rem"
+            height="1.7rem"
+            fit="cover"
+            class="avatarImg"
+            round
+          >
+            <template v-slot:error>
+              暂无头像
+            </template>
+          </van-image>
+        </van-uploader>
       </div>
     </div>
-     <div class="itemList">
+    <div class="itemList">
       <div class="item">
-        <p>公司名称</p>
+        <p>昵称</p>
         <div class="companyName">
-          <van-tag type="success" class="lab" v-if="loginCompany.STATE == 0">待审核</van-tag>
-          <van-tag type="success" class="lab" v-if="loginCompany.STATE == 1">审核通过</van-tag>
-          <van-tag type="success" class="lab" v-if="loginCompany.STATE == 2">审核不通过</van-tag>
-          <van-tag type="success" class="lab" v-if="loginCompany.STATE == 3">资料不全</van-tag>
-          <span>{{loginCompany.COMPANY_NAME_ZH}}</span>
+          <span>{{ user.nickName }}</span>
         </div>
       </div>
     </div>
-     <div class="itemList">
+    <div class="itemList">
       <div class="item">
-        <p>所在地</p>
-        <p>{{loginCompany.ADDRESS_ZH}}</p>
+        <p>账号</p>
+        <p>{{ user.account }}</p>
       </div>
     </div>
-     <div class="itemList">
-      <div class="item" @click="toChangePassword">
+    <div class="itemList">
+      <div
+        class="item"
+        @click="toChangePassword"
+      >
         <p>账户密码</p>
-        
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Image, Tag  } from "vant";
+import { Image, Tag, Uploader   } from "vant";
 
 export default {
   name: "Setting",
-  data() {
-    return {};
-  },
 
   components: {
     [Image.name]: Image,
-    [Tag .name]: Tag 
+    [Tag .name]: Tag ,
+    [Uploader .name]: Uploader,
+  },
+  data() {
+    return {
+      user: {
+        avatar : this.$ls.get('user').avatar,
+        account: this.$ls.get('user').account,
+        nickName: this.$ls.get('user').nickName
+      }
+    };
   },
 
   computed: {
@@ -71,6 +89,24 @@ export default {
       this.$router.push({
         name: 'changePassword'
       })
+    },
+    // 上传头像
+    async afterRead(file) {
+      console.log(file.file);
+      
+      let formData = new FormData()
+      formData.append('file', file.file)
+      try {
+        let {data:res} = await this.$api.userApi.uploadAvatar(formData)
+        this.$set(this.user, 'avatar', res.data.path)
+        let user = this.$ls.get('user')
+        user.avatar = res.data.path
+        this.$ls.set('user', user)
+      } catch (err) {
+        console.log(err);
+        
+      }
+      
     }
   }
 };
