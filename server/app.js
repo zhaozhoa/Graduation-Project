@@ -31,6 +31,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+
 
 app.use(session({
   ////这里的name值得是cookie的name，默认cookie的name是：connect.sid
