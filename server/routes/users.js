@@ -9,8 +9,15 @@ const jwt = require('jsonwebtoken')
 const multer = require('multer')
 const fs = require('fs')
 const assert = require('http-assert')
+// 引入封装的解析jwt的中间件
 const decodeJwt = require('../middleware/decodeJwt')
-// const upload = multer({dest: __dirname + '../uploads'})// 读取 token 签名
+const upload = multer({
+  dest: path.join(__dirname, '../', 'uploads')
+}) 
+
+const host = 'http://localhost:3000'
+
+// 读取 token 签名
 // 读取取token的加密文件
 
 let secret
@@ -27,13 +34,13 @@ fs.readFile(__dirname + '../../.secret', (err, data) => {
 router.post('/hasUserName', async (req, res) => {
   
   let {
-    userName
+    account
   } = req.body
 
   try {
     let result = await User.findOne({
-      userName
-    })
+      account
+    },{account:1,phone:1})
     if (!result) {
       res.json({
         code: 0,
@@ -45,7 +52,7 @@ router.post('/hasUserName', async (req, res) => {
         msg: '用户已存在',
         data: {
           phone: result.phone,
-          userName
+          account
         }
       })
     }
@@ -61,16 +68,17 @@ router.post('/hasUserName', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   let {
-    userName,
+    account,
     password,
     phone,
     nickName
   } = req.body
   let user = new User ({
-    userName,
+    account,
     password: md5(password),
     phone,
-    nickName
+    nickName,
+    avatar: `${host}/uploads/default.jpg`
   })
   try {
     let result = await user.save()
@@ -119,7 +127,7 @@ router.get('/verificationPic', (req, res) => {
 })
 
 router.post('/login',  async (req, res) => {
-  let {userName, password, code} = req.body
+  let {account, password, code} = req.body
   if(req.session.captcha !== code.toLowerCase()) {
     res.status(422).json({
       code: 2,
@@ -127,22 +135,19 @@ router.post('/login',  async (req, res) => {
     })
     return
   }
-  let data = await User.findOne({userName})
+  let data = await User.findOne({
+    account
+  }, {
+    _id: 1,
+    nickName: 1,
+    avatar: 1,
+    phone:1,
+    password:1,
+    account
+  })
   
-  if (!data) {
-    res.res.status(422).json({
-      code:1,
-      msg: '用户名和密码不匹配'
-    })
-    return
-  }
-  if (data.password !== md5(password)) {
-    res.status(422).json({
-      code: 1,
-      msg: '用户名和密码不匹配'
-    })
-    return
-  }
+  assert(data, 422, '用户名和密码不匹配')
+  assert(data.password === md5(password), 422, '用户名和密码不匹配')
   // 生成token 签名
   const token = jwt.sign({
     _id: data._id
@@ -153,20 +158,21 @@ router.post('/login',  async (req, res) => {
     code: 0,
     msg: 'ok',
     data: {
-      userName,
+      account,
+      nickName: data.nickName,
+      avatar: data.avatar,
       phone: data.phone,
       token
     }
   })
-  // session 保存用户信息
-  req.session.user = userName
   
 })
 
 // 获取短信验证码
-let phoneCode
 router.post('/phoneVerification', async (req, res) => {
-  phoneCode = parseInt(Math.random() * 10000)
+    // session 保存用户信息
+    req.session.phoneVerification = parseInt(Math.random() * 10000)
+    let phoneCode = req.session.phoneVerification
   res.json({
     data: phoneCode
   })
@@ -175,7 +181,7 @@ router.post('/phoneVerification', async (req, res) => {
 // 校验短信验证码
 router.post('/checkPhoneVerification', async (req, res) => {
   let {code} = req.body
-  if (parseInt(code) === phoneCode) {
+  if (parseInt(code) === req.session.phoneVerification) {
     res.json({
       code: 0,
       msg: 'ok',
@@ -192,12 +198,11 @@ router.post('/checkPhoneVerification', async (req, res) => {
 
 // 修改密码
 router.post('/resetPassword', async (req, res) => {
-  let {userName, password} = req.body
-  console.log(userName,password);
+  let {phone, password} = req.body
+  assert(phone&&password, 422, '请求参数有误')
   
   try {
-    let result = await User.updateOne({userName}, {password:md5(password)})
-    console.log(result);
+    let result = await User.updateOne({phone}, {password:md5(password)})
     if (result) {
       res.json({
         code:0,
@@ -215,14 +220,50 @@ router.post('/resetPassword', async (req, res) => {
 
 })
 
-// 获取用户上传头像和昵称
+// 获取用户信息
 router.post('/getUserData',decodeJwt(), async (req, res) => {
-  res.send('获取用户头像')
+  let {_id} = req
+  try {
+    let result = await User.findOne({_id},{nickName:1, avatar: 1})
+    if (result) {
+      res.json({
+        code: 0,
+        msg: 'ok',
+        data: result
+      })
+    }else {
+      assert(false, 500, '服务器出错')
+    }
+    
+  } catch (err) {
+    console.log(err);
+    assert(false, 500, '服务器出错')
+    
+  }
+  
 })
 
-// // 上传用户头像
-// router.post('/uploadUserData', upload.single('file'), async (req, res) => {
+// 上传用户头像
+router.post('/uploadAvatar', decodeJwt(), upload.single('file'),async(req, res) => {
+  assert(req.file, '413','上传失败')
+  let path = `${host}/uploads/${req.file.filename}`
+  try {
+    await User.updateOne({_id:req._id},{avatar: path})
+  } catch (err) {
+    assert(req.file, '413', '上传失败')
+  }
+  if (req.file) {
+    res.json({
+      code: 0,
+      msg: 'ok',
+      data: {
+        path
+      }
+    })
+  }
+  
+  
+})
 
-// })
 
 module.exports = router
