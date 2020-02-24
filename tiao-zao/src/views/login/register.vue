@@ -17,8 +17,8 @@
     <van-cell-group>
       <van-field
         v-model="username"
-        label="登录名"
-        placeholder="请输入登录名"
+        label="账号"
+        placeholder="请输入账号"
         required
         :error-message="usernameTips"
         label-width="70px"
@@ -124,7 +124,7 @@ export default {
           this.usernameTips = "";
           this.userHasCheck = true;
         } else {
-          this.usernameTips = "登录名不可用";
+          this.usernameTips = "账号不可用";
         }
       }
     },
@@ -182,7 +182,7 @@ export default {
 
         let { data: res } = await this.$api.userApi.register(
           {
-            userName: this.username,
+            account: this.username,
             password: this.md5((this.password)),
             phone: this.phone,
             nickName:this.nickname,

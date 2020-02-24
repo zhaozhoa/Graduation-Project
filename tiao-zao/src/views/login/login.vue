@@ -8,8 +8,8 @@
     <van-cell-group>
       <van-field
         v-model="username"
-        label="登录名"
-        placeholder="请输入登录名"
+        label="账号"
+        placeholder="请输入账号"
         required
         :error-message="usernameTips"
         label-width="70px"
@@ -145,7 +145,7 @@ export default {
         try {
           let {data} = await this.$api.userApi.login(
            {
-              userName: this.username,
+              account: this.username,
               password: this.md5(this.password),
               code: this.checkPic
             }
@@ -154,7 +154,8 @@ export default {
           // 登陆成功 保存token
           this.$ls.set('token',data.data.token,1000*60*60)
           // 将用户信息存到 vuex
-          this.$ls.set('user', data.data,20 * 60 * 1000)
+          
+          this.$ls.set('user', data.data,60 * 60 * 1000)
           this.$store.commit("changeUserData", data.data);
           this.$toast('登陆成功')
           setTimeout(() => {

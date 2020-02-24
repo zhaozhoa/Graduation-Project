@@ -16,8 +16,8 @@
     <van-cell-group>
       <van-field
         v-model="username"
-        label="登录名"
-        placeholder="请输入登录名"
+        label="账号"
+        placeholder="请输入账号"
         required
         :error-message="usernameTips"
         label-width="70px"
@@ -72,7 +72,7 @@ export default {
       }
     },
     async next() {
-      let {data:res} = await this.$api.userApi.hasUserName({userName: this.username}) 
+      let {data:res} = await this.$api.userApi.hasUserName({account: this.username}) 
 
       if (res.code == 0) {
         this.usernameTips = '该用户不存在'
