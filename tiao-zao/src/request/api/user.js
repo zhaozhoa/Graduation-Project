@@ -55,6 +55,7 @@ const userApi = {
   checkPhoneVerification(params) {
      return axiosPost('checkPhoneVerification', params)
   },
+  // 重置密码
   resetPassword(params) {
     return axiosPost('resetPassword', params)
   },
@@ -64,9 +65,11 @@ const userApi = {
   },
   // 用户上传头像
   uploadAvatar(params) {
-    console.log(params);
-    
     return axiosPostUpload('uploadAvatar', params)
+  },
+  // 修改密码
+  modifyPassword(params) {
+    return axiosPost('modifyPassword', params)
   }
 
 
