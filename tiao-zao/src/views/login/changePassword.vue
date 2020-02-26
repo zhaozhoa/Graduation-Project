@@ -1,7 +1,13 @@
 <template>
   <div class="changePassword resetbg">
-    <p class="title">修改密码</p>
-    <img src="./../../assets/login/line.png" alt class="iconSetting" />
+    <p class="title">
+      修改密码
+    </p>
+    <img
+      src="./../../assets/login/line.png"
+      alt
+      class="iconSetting"
+    >
     <van-cell-group>
       <van-field
         v-model="Opassword"
@@ -35,17 +41,34 @@
       />
     </van-cell-group>
     <div class="btnGrop">
-      <van-button type="primary" class="btn" @click="checkPwd">确认修改</van-button>
-      <van-button class="btn" @click="cancel">取消</van-button>
+      <van-button
+        type="primary"
+        class="btn"
+        @click="checkPwd"
+      >
+        确认修改
+      </van-button>
+      <van-button
+        class="btn"
+        @click="cancel"
+      >
+        取消
+      </van-button>
     </div>
   </div>
 </template>
 
 <script>
-import qs from "qs";
 import { Field, Button, Cell, CellGroup } from "vant";
 export default {
-  name: "changePassword",
+  name: "ChangePassword",
+
+  components: {
+    [Field.name]: Field,
+    [Button.name]: Button,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup
+  },
   data() {
     return {
       password: "",
@@ -55,13 +78,6 @@ export default {
       password2Tips: "",
       OpasswordTips: ""
     };
-  },
-
-  components: {
-    [Field.name]: Field,
-    [Button.name]: Button,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup
   },
 
   computed: {},
@@ -77,24 +93,10 @@ export default {
         this.passwordTips = "";
       }
     },
-    async checkPsw3() {
+    checkPsw3() {
       if (!/^(?![a-z]+$)(?![0-9]+$)[a-zA-Z0-9]{5,20}$/.test(this.Opassword)) {
         this.OpasswordTips = "请输入5~20个字符，包含字母和数字！";
         return;
-      } else {
-        //  TODO 旧密码校验
-
-        let data = await this.axios.post(
-          this.httpurl+"/enterprise/verifyPassWord",
-          qs.stringify({
-            oldPassWord: this.md5(this.Opassword)
-          })
-        );
-        if (data.data.code === "0") {
-          this.OpasswordTips = "";
-        } else {
-          this.OpasswordTips = "输入密码错误";
-        }
       }
     },
     checkPsw2() {
@@ -106,6 +108,7 @@ export default {
       }
     },
     async checkPwd() {
+      this.checkPsw2()
       if (
         this.OpasswordTips == "" &&
         this.Opassword !== "" &&
@@ -114,18 +117,20 @@ export default {
         this.password2Tips == "" &&
         this.password2 !== ""
       ) {
-        let { data: res } = await this.axios.post(
-          this.httpurl+"/enterprise/updatePassWord",
-          qs.stringify({
-            LOGIN_NAME: this.$ls.get('user').USERNAME,
-            inputPsword: this.md5(this.password)
-          })
-        );
-        if (res.code === "0") {
-          this.$toast.success("修改成功");
-          this.cancel()
-        } else {
-          this.$toast.fail("修改失败");
+        try {
+          let { data: res } = await this.$api.userApi.modifyPassword(
+            {
+              oldPassword: this.md5(this.Opassword),
+              newPassword: this.md5(this.password)
+            }
+          );
+          if (res.code === 0) {
+            this.$toast.success("修改成功");
+            this.cancel()
+          } 
+        } catch (error) {
+         console.log(error);
+         
         }
       } else {
         this.$toast.fail("修改失败");
@@ -138,6 +143,7 @@ export default {
       this.passwordTips = "";
       this.password2Tips = "";
       this.OpasswordTips = "";
+      this.$router.go(-1)
     }
   }
 };
