@@ -196,7 +196,7 @@ router.post('/checkPhoneVerification', async (req, res) => {
   }
 })
 
-// 修改密码
+// 重置密码
 router.post('/resetPassword', async (req, res) => {
   let {phone, password} = req.body
   assert(phone&&password, 422, '请求参数有误')
@@ -265,5 +265,22 @@ router.post('/uploadAvatar', decodeJwt(), upload.single('file'),async(req, res) 
   
 })
 
+// 修改密码
+router.post('/modifyPassword', decodeJwt(), async (req, res) => {
+  let {oldPassword, newPassword} = req.body
+  let _id = req._id
+    let {password} = await User.findOne({_id}, {password:1})
+    console.log(password);
+    assert(md5(oldPassword) === password, 422, '您输入的旧密码错误')
+    let result = await User.updateOne({
+      _id
+    }, {
+      password: md5(newPassword)
+    })
+    res.json({
+      code: 0,
+      msg: 'ok'
+    })
+})
 
 module.exports = router
