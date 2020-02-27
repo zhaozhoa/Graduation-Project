@@ -45,6 +45,7 @@
         />
         <span>我的购物车</span>
       </div>
+
       <div
         class="listItem"
         @click="go('myTradeInfo')"
@@ -56,6 +57,19 @@
         />
         <span>我的贸易信息</span>
       </div>
+
+      <div
+        class="listItem"
+        @click="go('publish')"
+      >
+        <van-icon
+          name="add-square"
+          color="#f7ab27"
+          class="icon"
+        />
+        <span>发布消息</span>
+      </div>
+
       <div
         class="listItem"
         @click="go('setting')"
