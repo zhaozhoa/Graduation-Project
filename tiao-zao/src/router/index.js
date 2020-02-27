@@ -64,6 +64,15 @@ const routes = [
       LoginCheck: true
     }
   },
+  {
+    path: '/publish',
+    name: 'publish',
+    component: () => import('../views/Me/publish.vue'),
+    meta: {
+      title: '发布',
+      LoginCheck: true
+    },
+  },
 
   {
     path: '/companyIndex/',
