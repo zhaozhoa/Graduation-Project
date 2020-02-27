@@ -8,23 +8,58 @@
         :offset="offset"
         @load="getData"
       >
-        <div class="item" v-for="item in searchData" :key="item.INFORMATION_ID" @click="goDetail(item.INFORMATION_ID)">
-          <div class="title">{{item.TITLE}}</div>
-          <van-tag size="medium" plain class="tag">{{item.CATEGORY}}</van-tag>
+        <div
+          v-for="item in searchData"
+          :key="item.INFORMATION_ID"
+          class="item"
+          @click="goDetail(item.INFORMATION_ID)"
+        >
+          <div class="title">
+            {{ item.TITLE }}
+          </div>
+          <van-tag
+            size="medium"
+            plain
+            class="tag"
+          >
+            {{ item.CATEGORY }}
+          </van-tag>
           <div class="footer">
-            <van-tag type="primary" size="medium" v-if="item.STATE == '待审核'">待审核</van-tag>
-            <van-tag type="success" size="medium" v-if="item.STATE == '审核通过'">审核通过</van-tag>
-            <van-tag type="danger" size="medium" v-if="item.STATE == '审核不通过'">审核不通过</van-tag>
+            <van-tag
+              v-if="item.STATE == '待审核'"
+              type="primary"
+              size="medium"
+            >
+              待审核
+            </van-tag>
+            <van-tag
+              v-if="item.STATE == '审核通过'"
+              type="success"
+              size="medium"
+            >
+              审核通过
+            </van-tag>
+            <van-tag
+              v-if="item.STATE == '审核不通过'"
+              type="danger"
+              size="medium"
+            >
+              审核不通过
+            </van-tag>
 
             <div class="time">
-              <van-icon name="clock" size="13" class="icon" />
-              <span>{{item.PUBLISH_DATE}}</span>
+              <van-icon
+                name="clock"
+                size="13"
+                class="icon"
+              />
+              <span>{{ item.PUBLISH_DATE }}</span>
             </div>
           </div>
         </div>
       </van-list>
     </div>
-    <TabBar></TabBar>
+    <TabBar />
   </div>
 </template>
 
@@ -32,7 +67,13 @@
 import qs from "qs";
 import { Tag, Icon, List } from "vant";
 export default {
-  name: "myTradeInfo.",
+  name: "MyTradeInfo",
+
+  components: {
+    [Tag.name]: Tag,
+    [Icon.name]: Icon,
+    [List.name]: List
+  },
   data() {
     return {
       searchData: [],
@@ -42,12 +83,6 @@ export default {
       showCount: 10,
       offset: 30
     };
-  },
-
-  components: {
-    [Tag.name]: Tag,
-    [Icon.name]: Icon,
-    [List.name]: List
   },
 
   computed: {},
