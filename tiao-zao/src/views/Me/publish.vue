@@ -8,8 +8,8 @@
       <van-field
         readonly
         clickable
-        name="picker"
-        :value="value"
+        name="category"
+        :value="category"
         label="发布类型"
         placeholder="点击选择发布类型"
         :rules="[{required: true, message: '请选择发布类型'}]"
@@ -29,26 +29,42 @@
       </van-popup>
 
       <van-field
-        v-model="username"
-        name="用户名"
+        v-model="title"
+        name="title"
         label="标题"
         placeholder="请输入标题"
         :rules="[{ required: true, message: '请输入标题' }]"
       />
+      <van-field
+        v-model="price"
+        name="price"
+        label="价格"
+        placeholder="请输入价格"
+        :rules="[{ required: true, message: '请输入价格' }]"
+      />
 
       <van-field
-        v-model="message"
+        v-model="description"
         rows="1"
         autosize
         name="description"
         label="详情描述"
         type="textarea"
         placeholder="请输入详情描述"
+        :rules="[{ required: true, message: '请输入详情描述' }]"
+      />
+
+      <van-field
+        v-model="contact "
+        name="contact"
+        type="textarea"
+        label="联系方式"
+        placeholder="请输入联系方式"
       />
       
 
       <van-field
-        name="uploader"
+        name="file"
         label="图片上传"
       >
         <template #input>
@@ -93,27 +109,68 @@ export default {
   },
   data () {
     return {
-      username: '',
-      value: '',
+      title: '',
+      price: '',
+      category: '',
       columns:  ['发布出售信息', '发布采购信息', '发布活动信息', '发布吐槽信息'],
       showPicker: false,
       uploader: [],
-      message: '',
+      description: '',
+      contact: ''
     }
   },
 
   computed: {},
 
   mounted () {
-    this.value = this.columns[0]
+    this.category = this.columns[0]
   },
 
   methods: {
-    onSubmit(values) {
-      console.log('submit', values);
+    async onSubmit(values) {
+      this.columns.forEach((item,index) => {
+        if (item === values.category) {
+          values.category = index + 1
+        }
+      });
+      for (let i = 0; i < values.file.length; i++) {
+        const ele = values.file[i];
+        values.file[i] = ele.file
+      }
+      // console.log(values.file.file);
+      let formData = new FormData()
+      for (const key in values) {
+        if (values.hasOwnProperty(key)) {
+          const ele = values[key];
+          if (key === 'file') {
+            for (let j = 0; j < ele.length; j++) {
+              const item = ele[j];
+              formData.append('file', item)
+            }
+          }else {
+            formData.append(key,ele)
+          }
+        }
+      }
+      try {
+        let {data: res} = await this.$api.infoApi.publish(formData)
+        
+        if (res.code === 0) {
+          this.category = this.columns[0]
+          this.title = ''
+          this.description = '',
+          this.price = ''
+          this.uploader = [],
+          this.contact = ''
+        }
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
     },
     onConfirm(value) {
-      this.value = value;
+      this.category = value;
       this.showPicker = false;
     },
   }
