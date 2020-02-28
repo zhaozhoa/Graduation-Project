@@ -92,7 +92,8 @@ export default {
     },
     // 上传头像
     async afterRead(file) {
-      console.log(file.file);
+      console.log(file);
+      
       
       let formData = new FormData()
       formData.append('file', file.file)
