@@ -9,7 +9,9 @@ import needBuy from './needBuy';
 // 首页模块接口
 import homeApi from './home'
 
-import productsApi from './product'
+// 二手产品信息接口
+import infoApi from './info'
+
 import userApi from './user'
 
 
@@ -18,6 +20,6 @@ import userApi from './user'
 export default {
   needBuy,
   homeApi,
-  productsApi,
+  infoApi,
   userApi
 }
