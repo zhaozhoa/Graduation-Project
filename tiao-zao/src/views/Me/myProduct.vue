@@ -4,55 +4,75 @@
       <van-list
         v-model="loading"
         :finished="finished"
-        finished-text="没有更多了"
+        finished-text="我是有底线的"
         :offset="offset"
         @load="getData"
       >
         <div
-          class="productItem"
           v-for="item in data"
-          :key="item.GOODS_ID"
-          @click="detail(item.GOODS_ID)"
+          :key="item._id"
+          class="productItem"
+          @click="detail(item._id)"
         >
           <van-image
-            :src="item.IMAGE_PATH"
+            :src="item.img.length!==0 ? item.img[0] : ''"
             width="3.2rem"
             height="3.2rem"
             fit="cover"
             class="avatarImg"
           >
-            <template v-slot:error>暂无图片</template>
+            <template v-slot:error>
+              图片未上传
+            </template>
           </van-image>
           <div class="info">
-            <p>{{item.GOODS_NAME}}</p>
-            <div class="price" v-if="item.PRICE_TYPE == 1 ? true : false">
+            <p>{{ item.title }}</p>
+            <div
+              class="price"
+            >
               <div class="priceTitle">
-                <van-icon name="gold-coin" class="icon" size="15" />
-                <span>价格 {{item.FIXED_PRICE}}</span>
+                <van-icon
+                  name="gold-coin"
+                  class="icon"
+                  size="15"
+                />
+                <span>价格 {{ item.price }}</span>
               </div>
             </div>
-            <div class="price" v-if="item.PRICE_TYPE == 0 ? true : false">
-              <div class="priceTitle">
-                <van-icon name="gold-coin" class="icon" size="15" />
-                <span>价格面议</span>
-              </div>
-            </div>
-            <van-tag type="success" size="medium" v-if="item.STATE === '1'">已上架</van-tag>
-            <van-tag type="primary" size="medium" v-else-if="item.STATE === '0'">待审核</van-tag>
-            <van-tag type="danger" size="medium" v-else-if="item.STATE === '2'">审核不通过</van-tag>
+            
+            <van-tag
+              v-if="item.status === 1"
+              type="success"
+              size="medium"
+            >
+              已发布
+            </van-tag>
+            <van-tag
+              v-else-if="item.status === '0'"
+              type="primary"
+              size="medium"
+            >
+              已撤回
+            </van-tag>
           </div>
         </div>
       </van-list>
     </div>
-    <TabBar></TabBar>
+    <TabBar />
   </div>
 </template>
 
 <script>
-import qs from "qs";
 import { Image, Tag, Icon, List } from "vant";
 export default {
-  name: "myProduct",
+  name: "MyProduct",
+
+  components: {
+    [Image.name]: Image,
+    [Tag.name]: Tag,
+    [Icon.name]: Icon,
+    [List.name]: List
+  },
   data() {
     return {
       data: "",
@@ -62,13 +82,6 @@ export default {
       showCount: 10,
       offset: 30
     };
-  },
-
-  components: {
-    [Image.name]: Image,
-    [Tag.name]: Tag,
-    [Icon.name]: Icon,
-    [List.name]: List
   },
 
   computed: {},
@@ -81,25 +94,12 @@ export default {
     async getData() {
 
       try {
-        let { data: res } = await this.axios.post(
-          this.httpurl+"/miniProIndex/listMyProduct",
-          qs.stringify({
-            // this.$ls.get('user').USER_ID
-            // "b5013c29ea594a03a7c89a9187b0906a"
-            ENTERPRISE_ID: this.$ls.get('user').USER_ID,
+        let { data: res } = await this.$api.infoApi.getInfoList(
+          { category: 1,
             currentPage: this.currentPage,
             showCount: this.showCount
-          })
-        );
-        res.data.forEach(ele => {
-          if (ele.hasOwnProperty('IMAGE_PATH')) {
-            if ((ele.IMAGE_PATH).includes('@;@')) {
-              ele.IMAGE_PATH = this.httpurl + ele.IMAGE_PATH.split("@;@")[0];
-            } else {
-              ele.IMAGE_PATH = this.httpurl + ele.IMAGE_PATH
-            }
           }
-        });
+        );
 
         this.loading = false;
         this.data = [...this.data, ...res.data];
@@ -114,23 +114,10 @@ export default {
       }
     },
 
-    // async getData() {
-    //   let { data: res } = await this.axios.post(
-    //     this.httpurl+"/miniProIndex/listMyProduct",
-    //     qs.stringify({
-    //       // this.$ls.get('user').USER_ID
-    //       ENTERPRISE_ID: "b5013c29ea594a03a7c89a9187b0906a"
-    //     })
-    //   );
-    // res.data.forEach(ele => {
-    //   ele.IMAGE_PATH = this.httpurl+"/" + ele.IMAGE_PATH.split(";")[0];
-    // });
-    //   this.data = res.data;
-    // },
-    detail(GOODS_ID) {
+    detail(_id) {
       this.$router.push({
-        name: "productDetail",
-        params: { GoodsId: GOODS_ID }
+        name: "modifyInfo",
+        params: { _id }
       });
     }
   }
