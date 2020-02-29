@@ -73,6 +73,15 @@ const routes = [
       LoginCheck: true
     },
   },
+  {
+    path: '/modifyInfo/:_id',
+    name: 'modifyInfo',
+    component: () => import('../views/Me/modifyInfo.vue'),
+    meta: {
+      title: '修改发布消息',
+      LoginCheck: true
+    },
+  },
 
   {
     path: '/companyIndex/',
