@@ -6,14 +6,14 @@
  import axios from '../http';
  import qs from 'qs'
 
- function axiosGet(url, params) {
-   return axios({
-     method: 'get',
-     url: `${base.sq}/info/${url}`,
-     params: params,
-     withCredentials: true
-   })
- }
+//  function axiosGet(url, params) {
+//    return axios({
+//      method: 'get',
+//      url: `${base.sq}/info/${url}`,
+//      params: params,
+//      withCredentials: true
+//    })
+//  }
 
  function axiosPost(url, params) {
    return axios({
@@ -24,6 +24,11 @@
    })
  }
 
+ /**
+  * formdata 方式上传数据
+  * @param {string} url 上传地址
+  * @param {formdata} params 上传数据
+  */
  function axiosPostUpload(url, params) {
    return axios({
      method: 'post',
@@ -37,19 +42,20 @@
  }
 
  const infoApi = {
-  //  获取产品分类
-  getProductCategories(params) {
-    return axios.post(`${base.sq}/productsCategories`, qs.stringify(params))
-  },
-
-  // 获取分类下面的产品
-  getCategoryProducts(categoryId) {
-    return axios.post(`$(base.sq)/categoryProducts`, qs.stringify(categoryId))
-  },
 
   // 发布产品信息
   publish(params) {
     return axiosPostUpload('publise', params)
+  },
+
+  // 获取用户发布的信息列表
+  getInfoList(params) {
+    return axiosPost('getInfoList', params)
+  },
+
+  // 获取用户发布的信息
+  getInfo(params) {
+    return axiosPost('getInfo', params)
   }
  }
 
