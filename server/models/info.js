@@ -16,7 +16,7 @@ let infoSchema = new Schema({
   // 价格
   price: {
     type: String,
-    required: true
+    // required: true
   },
   // 描述
   description: {
@@ -33,10 +33,10 @@ let infoSchema = new Schema({
     type: String,
     required: true
   },
-  // 状态 1==已发布， 2==撤回
+  // 状态 1==已发布， 0==撤回
   status: {
     type: Number,
-    enum: [1,2],
+    enum: [1,0],
     default: 1,
     required: true
   },
