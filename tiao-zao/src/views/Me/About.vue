@@ -22,6 +22,7 @@
         {{ account }}
       </p>
     </header>
+
     <div class="list">
       <div
         class="listItem"
@@ -32,8 +33,9 @@
           color="#2885ff"
           class="icon"
         />
-        <span>我的产品</span>
+        <span>我的出售信息</span>
       </div>
+
       <div
         class="listItem"
         @click="go('myCart')"
@@ -43,7 +45,7 @@
           color="#39c6b7"
           class="icon"
         />
-        <span>我的购物车</span>
+        <span>我的采购信息</span>
       </div>
 
       <div
@@ -55,7 +57,19 @@
           color="#f7ab27"
           class="icon"
         />
-        <span>我的贸易信息</span>
+        <span>我的吐槽信息</span>
+      </div>
+
+      <div
+        class="listItem"
+        @click="go('myTradeInfo')"
+      >
+        <van-icon
+          name="friends"
+          color="orangered"
+          class="icon"
+        />
+        <span>我的活动信息</span>
       </div>
 
       <div
