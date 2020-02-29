@@ -28,7 +28,7 @@ fs.readFile(__dirname + '../../.secret', (err, data) => {
   }
 })
 
-// 检查注册的用户名是否已经存在
+// 用户发布信息
 router.post('/publise', decodeJwt(), upload.array('file', 5), async (req, res) => {
   /**
    * 1. 通过token 拿到用户_id
@@ -79,62 +79,52 @@ router.post('/publise', decodeJwt(), upload.array('file', 5), async (req, res) =
   }
 })
 
-
-
-// 获取用户信息
-router.post('/getUserData', decodeJwt(), async (req, res) => {
+// 分页查询用户发布信息列表
+router.post('/getInfoList', decodeJwt(), async (req, res) => {
   let {
-    _id
-  } = req
+    category,
+    currentPage,
+    showCount
+  } = req.body
+  
+  let owner_id = req._id
   try {
-    let result = await User.findOne({
-      _id
-    }, {
-      nickName: 1,
-      avatar: 1
+    // 查询总条数
+    let count = await Info.countDocuments({
+      category,
+      owner_id
     })
-    if (result) {
-      res.json({
-        code: 0,
-        msg: 'ok',
-        data: result
-      })
-    } else {
-      assert(false, 500, '服务器出错')
-    }
 
-  } catch (err) {
-    console.log(err);
-    assert(false, 500, '服务器出错')
+    let result = await Info.find({
+      category,
+      owner_id
+    }, {
+      description:0
+    }).limit(parseInt(showCount)).skip((parseInt(currentPage) - 1) * showCount).sort({'createdTime': -1})
 
+    res.json({
+      code: 0,
+      total: count,
+      data: result
+    })
+  } catch (error) {
+    console.log(error);
+    
   }
 
 })
 
-// 上传用户头像
-router.post('/uploadAvatar', decodeJwt(), upload.single('file'), async (req, res) => {
-  assert(req.file, '413', '上传失败')
-  let path = `${host}/uploads/${req.file.filename}`
-  try {
-    await User.updateOne({
-      _id: req._id
-    }, {
-      avatar: path
-    })
-  } catch (err) {
-    assert(req.file, '413', '上传失败')
-  }
-  if (req.file) {
-    res.json({
-      code: 0,
-      msg: 'ok',
-      data: {
-        path
-      }
-    })
-  }
-
-
+// 查询单个用户发布的信息
+router.post('/getInfo', async (req, res) => {
+  let {_id} = req.body
+  let result = await Info.findById(_id)
+  
+  assert(result, 500, '系统忙，请稍后重试')
+  res.json({
+    code: 0,
+    msg: 'ok',
+    data: result
+  })
 })
 
 
