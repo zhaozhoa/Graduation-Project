@@ -36,6 +36,7 @@
         :rules="[{ required: true, message: '请输入标题' }]"
       />
       <van-field
+        v-if="priceShow"
         v-model="price"
         name="price"
         label="价格"
@@ -55,6 +56,7 @@
       />
 
       <van-field
+        v-if="contactShow"
         v-model="contact "
         name="contact"
         type="textarea"
@@ -116,7 +118,9 @@ export default {
       showPicker: false,
       uploader: [],
       description: '',
-      contact: ''
+      contact: '',
+      priceShow: true,
+      contactShow: true
     }
   },
 
@@ -163,6 +167,7 @@ export default {
           this.uploader = [],
           this.contact = ''
         }
+        this.$toast.success('发布成功')
         
       } catch (error) {
         console.log(error);
@@ -170,6 +175,14 @@ export default {
       }
     },
     onConfirm(value) {
+      if (value === '发布活动信息') {
+        this.priceShow = false
+      }else {
+        this.priceShow = true
+      }
+      this.priceShow = value === '发布活动信息' || value === '发布吐槽信息' ? false : true
+      this.contactShow = value === '发布吐槽信息' ? false: true
+
       this.category = value;
       this.showPicker = false;
     },
