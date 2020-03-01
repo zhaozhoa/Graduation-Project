@@ -38,7 +38,7 @@
 
       <div
         class="listItem"
-        @click="go('myCart')"
+        @click="go('otherInfo', 2)"
       >
         <van-icon
           name="shopping-cart"
@@ -50,7 +50,7 @@
 
       <div
         class="listItem"
-        @click="go('myTradeInfo')"
+        @click="go('otherInfo', 4)"
       >
         <van-icon
           name="balance-list"
@@ -62,7 +62,7 @@
 
       <div
         class="listItem"
-        @click="go('myTradeInfo')"
+        @click="go('otherInfo', 3)"
       >
         <van-icon
           name="friends"
@@ -128,9 +128,10 @@ export default {
   mounted() {},
 
   methods: {
-    go(router) {
+    go(router, category) {
       this.$router.push({
-        name: router
+        name: router,
+        params: { category }
       })
     }
   }

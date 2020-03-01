@@ -15,7 +15,7 @@
           @click="detail(item._id)"
         >
           <van-image
-            :src="item.img.length!==0 ? item.img[0] : ''"
+            :src="item.img!==null&&item.img.length!==0 ? item.img[0] : ''"
             width="3.2rem"
             height="3.2rem"
             fit="cover"
@@ -48,8 +48,8 @@
               已发布
             </van-tag>
             <van-tag
-              v-else-if="item.status === '0'"
-              type="primary"
+              v-else-if="item.status === 0"
+              type="warning"
               size="medium"
             >
               已撤回

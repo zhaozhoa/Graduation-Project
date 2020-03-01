@@ -79,7 +79,8 @@
       </van-field>
 
       <van-field
-        name="radio"
+        v-if="hasPublish"
+        name="status"
         label="是否撤回"
       >
         <template #input>
@@ -87,11 +88,31 @@
             v-model="status"
             direction="horizontal"
           >
+            <van-radio name="0">
+              是
+            </van-radio>
             <van-radio name="1">
               否
             </van-radio>
-            <van-radio name="0">
+          </van-radio-group>
+        </template>
+      </van-field>
+
+      <van-field
+        v-else-if="!hasPublish"
+        name="status"
+        label="是否重新发布"
+      >
+        <template #input>
+          <van-radio-group
+            v-model="status"
+            direction="horizontal"
+          >
+            <van-radio name="1">
               是
+            </van-radio>
+            <van-radio name="0">
+              否
             </van-radio>
           </van-radio-group>
         </template>
@@ -99,12 +120,16 @@
 
 
 
-      <div style="margin: 16px;">
+      <div
+        style="margin: 16px;"
+        class="btn"
+      >
         <van-button
           round
           block
           type="info"
           native-type="submit"
+          :disabled="disabled"
         >
           提交
         </van-button>
@@ -144,6 +169,9 @@ export default {
       contactShow: true,
       Info_id: '',
       status: '1',
+      // 是否已经发布
+      hasPublish: true,
+      disabled: false
     }
   },
 
@@ -157,40 +185,55 @@ export default {
         _id: this.Info_id
       })
 
-      res.data.img = res.data.img.map(item => {
-        return {url: item}
-      })
-      console.log(res.data.img);
+      if (res.data.img !== null) {
+        
+        res.data.img = res.data.img.map(item => {
+          return {url: item, isImage: true}
+        })
+          this.uploader = res.data.img
+      }
       
+      this.hasPublish = res.data.status === 1 ? true: false
+
+
       this.title = res.data.title
       this.price = res.data.price
-      this.category = this.columns[res.data.category+1]
       this.description = res.data.description
       this.contact = res.data.contact
-      this.uploader = res.data.img
+      this.category = this.columns[res.data.category - 1]
+      if (this.category === '发布活动信息') {
+        this.priceShow = false
+      }else {
+        this.priceShow = true
+      }
+      this.priceShow = this.category === '发布活动信息' || this.category === '发布吐槽信息' ? false : true
+      this.contactShow = this.category === '发布吐槽信息' ? false: true
       
-      
+
     } catch (err) {
       console.log(err);
       
     }
-    this.category = this.columns[0]
   },
 
   methods: {
     async onSubmit(values) {
-      // 将分类名转换对 对应的 数字
+       // 将分类名转换对 对应的 数字
+       this.disabled = true
       this.columns.forEach((item,index) => {
         if (item === values.category) {
           values.category = index + 1
         }
       });
 
-      // 将图片数组中只保留二进制的图片文件
+     // 将图片数组中只保留二进制的图片文件
       for (let i = 0; i < values.file.length; i++) {
         const ele = values.file[i];
-        values.file[i] = ele.file
+        if (ele.file) {
+          values.file[i] = ele.file
+        }
       }
+      
 
       // 所有数据存放到 formData
       let formData = new FormData()
@@ -201,17 +244,28 @@ export default {
           if (key === 'file') {
             for (let j = 0; j < ele.length; j++) {
               const item = ele[j];
-              formData.append('file', item)
+              // 返回没修改的图片 url
+              if (item.url) {
+                formData.append('img', item.url)
+              } else {
+                // 上传新添加的图片
+                formData.append('file', item)
+              }
+              
             }
           }else {
             formData.append(key,ele)
           }
         }
       }
+      formData.append('info_id', this.Info_id)
+      
+      
       try {
-        let {data: res} = await this.$api.infoApi.publish(formData)
+        let {data: res} = await this.$api.infoApi.modifyInfo(formData)
         
         if (res.code === 0) {
+          this.disabled = false
           this.category = this.columns[0]
           this.title = ''
           this.description = '',
@@ -219,7 +273,7 @@ export default {
           this.uploader = [],
           this.contact = ''
         }
-        this.$toast.success('发布成功')
+        this.$toast.success('修改成功')
         
       } catch (error) {
         console.log(error);
@@ -252,6 +306,9 @@ export default {
       color:#19b5fe;
       text-align: center;
       margin-bottom: 10px;
+    }
+    .btn {
+      padding-bottom: 1.5rem;
     }
   }
 </style>
