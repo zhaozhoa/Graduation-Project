@@ -47,31 +47,6 @@ Mock.mock(/categoriesProducts/, 'post', {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Mock.mock(/company\/swipter/, 'post', {
   "msg": "操作成功",
   "code": "0",
