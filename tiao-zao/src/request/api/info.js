@@ -56,7 +56,12 @@
   // 获取用户发布的信息
   getInfo(params) {
     return axiosPost('getInfo', params)
-  }
+  },
+
+  // 修改用户发布的信息
+  modifyInfo(params) {
+    return axiosPostUpload('modifyInfo', params)
+  },
  }
 
  export default infoApi

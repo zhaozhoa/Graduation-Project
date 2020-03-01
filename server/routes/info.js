@@ -127,6 +127,43 @@ router.post('/getInfo', async (req, res) => {
   })
 })
 
+// 修改用户发布的信息
+router.post('/modifyInfo', decodeJwt(), upload.array('file', 5), async (req, res) => {
+  let {
+    category,
+    title,
+    price,
+    description,
+    contact,
+    status,
+    img,
+    info_id
+  } = req.body
+  if (req.files.length !== 0) {
+    req.files.forEach(item => {
+      img.push(`${host}/uploads/${item.filename}`)
+    })
+  }
+  try {
+    let result = await Info.updateOne({_id:info_id}, {
+      category: parseInt(category),
+      title,
+      price,
+      description,
+      contact,
+      status: parseInt(status),
+      img
+    })
+    res.json({
+      code: 0,
+      msg: 'ok',
+      data: ''
+    })
+  } catch (err) {
+    assert(false , err.code, err.message)
+  }
+})
+
 
 
 module.exports = router
