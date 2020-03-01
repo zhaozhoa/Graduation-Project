@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import axios from 'axios'
 import Storage from 'vue-ls';
 import api from './request/api'
 import './mock'
@@ -23,12 +22,8 @@ import "amfe-flexible";
 import md5 from 'js-md5'
 Vue.prototype.md5 = md5
 import TabBar from './components/tabBar.vue'
-import '../src/assets/reset.css'
 
 
-Vue.prototype.axios = axios
-Vue.prototype.httpurl = 'http://tzmy.beijiait.com:8099/tradepromo-service/'
-// Vue.prototype.httpurl = 'http://localhost:8081/'
 // 注册全局组件
 
 // 引入封装的接口文件
