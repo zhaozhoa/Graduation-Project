@@ -1,7 +1,7 @@
 <template>
   <div class="findPwd1 resetbg">
     <img
-      src="./../../assets/login/title.png"
+      src="./../../assets/login/title.jpg"
       alt
       class="titlePic"
     >

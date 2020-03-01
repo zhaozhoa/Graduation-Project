@@ -1,7 +1,7 @@
 <template>
   <div class="login resetbg">
     <img
-      src="./../../assets/login/title.png"
+      src="./../../assets/login/title.jpg"
       alt
       class="titlePic"
     >
@@ -157,7 +157,7 @@ export default {
           
           this.$ls.set('user', data.data,60 * 60 * 1000)
           this.$store.commit("changeUserData", data.data);
-          this.$toast('登陆成功')
+          this.$toast.success('登陆成功')
           setTimeout(() => {
           this.$router.push({name:'home'});
           }, 1000);
