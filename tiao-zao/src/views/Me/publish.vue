@@ -86,6 +86,7 @@
           block
           type="info"
           native-type="submit"
+          :disabled="disabled"
         >
           提交
         </van-button>
@@ -120,7 +121,8 @@ export default {
       description: '',
       contact: '',
       priceShow: true,
-      contactShow: true
+      contactShow: true,
+      disabled: false
     }
   },
 
@@ -132,6 +134,7 @@ export default {
 
   methods: {
     async onSubmit(values) {
+      this.disabled = true
       this.columns.forEach((item,index) => {
         if (item === values.category) {
           values.category = index + 1
@@ -141,7 +144,6 @@ export default {
         const ele = values.file[i];
         values.file[i] = ele.file
       }
-      // console.log(values.file.file);
       let formData = new FormData()
       for (const key in values) {
         if (values.hasOwnProperty(key)) {
@@ -160,6 +162,7 @@ export default {
         let {data: res} = await this.$api.infoApi.publish(formData)
         
         if (res.code === 0) {
+          this.disabled = false
           this.category = this.columns[0]
           this.title = ''
           this.description = '',
