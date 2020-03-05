@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Home from '../views/Home.vue'
 import loginRouter from './loginRouter'
 import MeRouter from './MeRouter'
-import Home from '../views/Home.vue'
+import InfoRouter from './infoRouter'
 
 Vue.use(VueRouter)
 
@@ -16,37 +17,8 @@ const routes = [
     }
   },
   ...MeRouter,
-
-  
-  // {
-  //   path: '/productList',
-  //   name: 'productList',
-  //   component: () => import('../views/product/productList.vue'),
-  //   meta: {
-  //     title: '产品列表'
-  //   },
-  // },
-  // {
-  //   path: '/productDetail/:GoodsId',
-  //   name: 'productDetail',
-  //   component: () => import('../views/product/productDetail.vue'),
-  //   meta: {
-  //     title: '产品详情'
-  //   },
-  // },
-  // {
-  //   path: '/productShow',
-  //   name: 'productShow',
-  //   component: () => import('../views/product/productShow.vue'),
-  //   meta: {
-  //     title: '产品详情'
-  //   },
-  // },
-  
-  
-  
+  ...InfoRouter,
   ...loginRouter
-
 ]
 
 const router = new VueRouter({
