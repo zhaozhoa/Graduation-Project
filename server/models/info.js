@@ -1,4 +1,4 @@
-let mongoose = require('mongoose');
+let mongoose = require('./db');
 let Schema = mongoose.Schema;
 
 let infoSchema = new Schema({
@@ -30,7 +30,7 @@ let infoSchema = new Schema({
   },
   // 发布人_id
   owner_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true
   },
   // 状态 1==已发布， 0==撤回
