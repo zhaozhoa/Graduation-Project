@@ -6,15 +6,6 @@
  import axios from '../http';
  import qs from 'qs'
 
-//  function axiosGet(url, params) {
-//    return axios({
-//      method: 'get',
-//      url: `${base.sq}/info/${url}`,
-//      params: params,
-//      withCredentials: true
-//    })
-//  }
-
  function axiosPost(url, params) {
    return axios({
      method: 'post',
@@ -61,6 +52,11 @@
   // 修改用户发布的信息
   modifyInfo(params) {
     return axiosPostUpload('modifyInfo', params)
+  },
+
+  // 查询所有出售消息
+  sellInfoList(params) {
+    return axiosPost('sellInfoList', params)
   },
  }
 
