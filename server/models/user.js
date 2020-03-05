@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+let mongoose = require('./db');
 
 let Schema = mongoose.Schema
 
