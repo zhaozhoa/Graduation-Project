@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path');
+let mongoose = require('mongoose');
 //引入 数据库 Schema
 const Info = require('../models/info')
 const router = express.Router()
@@ -117,13 +118,40 @@ router.post('/getInfoList', decodeJwt(), async (req, res) => {
 // 查询单个用户发布的信息
 router.post('/getInfo', async (req, res) => {
   let {_id} = req.body
-  let result = await Info.findById(_id)
+  // let result = await Info.findById(_id)
+
+  let result = await Info.aggregate([
+    {
+      $match: {
+        _id: mongoose.Types.ObjectId(_id)
+      }
+    },
+    {
+      $lookup:{
+        from: 'users', // 数据库关联的表名
+          localField: 'owner_id', // 外键
+          foreignField: '_id', // 关联表的主键
+          as: 'userInfo'
+      }
+    }
+  ])
+
+  let tempObj = result[0].userInfo[0]
+  
+  for (const key in tempObj) {
+    if (tempObj.hasOwnProperty(key)) {
+      if (key !== 'avatar' && key !== 'nickName') {
+        delete tempObj[key]
+      }
+    }
+  }
+  result[0].userInfo = result[0].userInfo[0]
   
   assert(result, 500, '系统忙，请稍后重试')
   res.json({
     code: 0,
     msg: 'ok',
-    data: result
+    data: result[0]
   })
 })
 
@@ -164,6 +192,63 @@ router.post('/modifyInfo', decodeJwt(), upload.array('file', 5), async (req, res
   }
 })
 
+// 分页查询所有出售信息
+router.post('/sellInfoList', async (req, res) => {
+  let {
+    category,
+    currentPage,
+    showCount
+  } = req.body
+
+  category = parseInt(category)
+  currentPage = parseInt(currentPage)
+  showCount = parseInt(showCount)
+  
+   // 查询总条数
+   let count = await Info.countDocuments({
+     category,
+     status: 1
+   })
+    
+   try {
+     let result = await Info.aggregate([
+       {
+         $match: {category: category, status: 1}
+        },
+        {
+          $lookup: 
+          {
+            from: 'users',  // 数据库关联的表名
+            localField: 'owner_id', // 外键
+            foreignField: '_id', // 关联表的主键
+            as: 'nickName'
+          }
+        },
+        {
+         $sort: {createdTime: -1}
+       },
+       {
+         $skip: (currentPage - 1) * showCount
+       } ,{
+         $limit: showCount
+       },
+     ])
+    result.forEach(item => {
+      item.nickName = item.nickName.map(item2 => item2.nickName)[0]
+    })
+     res.json({
+       code: 0,
+       msg: 'ok',
+       total: count,
+       data: result
+     })
+     
+   } catch (error) {
+     console.log(error);
+     
+   }
+
+})
 
 
 module.exports = router
