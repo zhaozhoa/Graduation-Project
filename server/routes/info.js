@@ -118,7 +118,6 @@ router.post('/getInfoList', decodeJwt(), async (req, res) => {
 // 查询单个用户发布的信息
 router.post('/getInfo', async (req, res) => {
   let {_id} = req.body
-  // let result = await Info.findById(_id)
 
   let result = await Info.aggregate([
     {
