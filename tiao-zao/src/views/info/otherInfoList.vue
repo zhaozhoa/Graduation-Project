@@ -14,39 +14,26 @@
           class="productItem"
           @click="detail(item._id)"
         >
-          <van-image
-            :src="item.img!==null&&item.img.length!==0 ? item.img[0] : ''"
-            width="3.2rem"
-            height="3.2rem"
-            fit="cover"
-            class="avatarImg"
-          >
-            <template v-slot:error>
-              图片未上传
-            </template>
-          </van-image>
-
           <div class="info">
-            <p>{{ item.title }}</p>
-            <div class="price">
-              <div class="priceTitle">
-                <van-icon
-                  name="gold-coin"
-                  class="icon"
-                  size="15"
-                />
-                <span>价格 {{ item.price }}</span>
-              </div>
-            </div>
-            
+            <p class="infoTitle">
+              {{ item.title }}
+            </p>
             <van-tag
               type="success"
               size="medium"
-              plain 
+              plain
+              class="nickName"
             >
               {{ item.nickName }}
             </van-tag>
-            <div>{{ item.createdTime.split('T')[0] }}</div>
+            <div class="time">
+              <van-icon
+                name="underway"
+                size="15"
+                class="icon"
+              />
+              {{ item.createdTime.split('T')[0] }}
+            </div>
           </div>
         </div>
       </van-list>
@@ -73,14 +60,15 @@ export default {
       finished: false,
       currentPage: 1,
       showCount: 10,
-      offset: 30
+      offset: 30,
+      category: ''
     };
   },
 
   computed: {},
 
   mounted() {
-    // this.getData();
+    this.category = this.$route.params.category
   },
 
   methods: {
@@ -88,7 +76,7 @@ export default {
 
       try {
         let { data: res } = await this.$api.infoApi.sellInfoList(
-          { category: 1,
+          { category: parseInt(this.category),
             currentPage: this.currentPage,
             showCount: this.showCount
           }
@@ -109,7 +97,7 @@ export default {
 
     detail(_id) {
       this.$router.push({
-        name: "sellInfoDetail",
+        name: "otherInfoDeatil",
         params: { _id }
       });
     }
@@ -128,45 +116,35 @@ export default {
     display: flex;
     align-items: center;
     width: 100%;
-    height: 4.1rem;
+    height: 2.1rem;
     border-bottom: 1px solid #f0f0f0;
+    position: relative;
     .info {
       font-size: 0.37rem;
       font-weight: bold;
       color: rgba(51, 51, 51, 1);
-      width: 4rem;
-      height: 3.2rem;
+      width: 100%;
+      height: 2rem;
       margin-left: 0.64rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: flex-start;
-      // flex-wrap: wrap;
-      p {
-        margin: 0;
+      .infoTitle {
+        margin-top: 0.1rem;
       }
-      p:nth-child(2) {
+      .nickName {
+        margin-top: .2rem;
+      }
+      .time {
+        position: absolute;
+        right: .2rem;
+        bottom: 0.2rem;
+        float: right;
         color: #999;
-        font-weight: 400;
+        .icon {
+          vertical-align: middle;
+        }
       }
+     
     }
   }
-  .price {
-    padding: 0.27rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.32rem;
-    padding: 0;
-    .priceTitle {
-      display: flex;
-      align-items: center;
-      font-size: 0.35rem;
-      color: #ff0000;
-      .icon {
-        margin-right: 5px;
-      }
-    }
-  }
+
 }
 </style>

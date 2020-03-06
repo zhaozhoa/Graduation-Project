@@ -6,30 +6,30 @@ const infoRouter = [{
       title: '出售列表页',
     }
   },
-  // {
-  //   path: '/productList',
-  //   name: 'productList',
-  //   component: () => import('../views/product/productList.vue'),
-  //   meta: {
-  //     title: '产品列表'
-  //   },
-  // },
-  // {
-  //   path: '/productDetail/:GoodsId',
-  //   name: 'productDetail',
-  //   component: () => import('../views/product/productDetail.vue'),
-  //   meta: {
-  //     title: '产品详情'
-  //   },
-  // },
-  // {
-  //   path: '/productShow',
-  //   name: 'productShow',
-  //   component: () => import('../views/product/productShow.vue'),
-  //   meta: {
-  //     title: '产品详情'
-  //   },
-  // },
+  {
+    path: '/sellInfoDetail/:_id',
+    name: 'sellInfoDetail',
+    component: () => import('../views/info/sellInfoDeatil.vue'),
+    meta: {
+      title: '出售消息详情'
+    },
+  },
+  {
+    path: '/otherInfoList/:category',
+    name: 'otherInfoList',
+    component: () => import('../views/info/otherInfoList.vue'),
+    meta: {
+      title: '出售消息详情'
+    },
+  },
+  {
+    path: '/otherInfoDeatil/:_id',
+    name: 'otherInfoDeatil',
+    component: () => import('../views/info/otherInfoDeatil.vue'),
+    meta: {
+      title: '出售消息详情'
+    },
+  },
 ]
 
 export default infoRouter

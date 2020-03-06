@@ -129,7 +129,7 @@ export default {
   padding: 0.27rem;
   .item {
     width: 100%;
-    height: 4rem;
+    height: 3rem;
     border-bottom: 1px solid #f0f0f0;
     font-size: 0.37rem;
     font-weight: bold;

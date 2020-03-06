@@ -29,16 +29,16 @@
       <div class="linkWapper wapper3">
         <div
           class="linkitem"
-          @click="goName('productShow')"
+          @click="goName('sellInfoList')"
         >
-          <p>产品展示</p>
+          <p>出售商品</p>
         </div>
       </div>
       
       <div class="linkWapper wapper2">
         <div
           class="linkitem"
-          @click="go('2', 'searchHide')"
+          @click="go('2')"
         >
           <p>采购需求</p>
         </div>
@@ -47,7 +47,7 @@
       <div class="linkWapper wapper1">
         <div
           class="linkitem"
-          @click="go('0', 'searchHide')"
+          @click="go('4')"
         >
           <p>校园吐槽</p>
         </div>
@@ -57,7 +57,7 @@
       <div class="linkWapper wapper4">
         <div
           class="linkitem"
-          @click="goName('service')"
+          @click="go('3')"
         >
           <p>校园活动</p>
         </div>
@@ -103,13 +103,12 @@ export default {
     toSearchPaeg() {
       this.$router.push({ name: "search" });
     },
-    go(categories, searchHide) {
-      this.$store.commit("changeKeyWords", '');
+
+    go(category) {
       this.$router.push({
-        name: 'needBuySearchList',
+        name: 'otherInfoList',
         params: {
-          categories,
-          searchHide,
+          category
         }
       })
     },
