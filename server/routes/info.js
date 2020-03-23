@@ -156,6 +156,9 @@ router.post('/getInfo', async (req, res) => {
       if (key !== 'avatar' && key !== 'nickName') {
         delete tempObj[key]
       }
+      if (key === 'avatar') {
+        tempObj[key] = `${host}${tempObj[key]}`
+      }
     }
   }
   result[0].userInfo = result[0].userInfo[0]
