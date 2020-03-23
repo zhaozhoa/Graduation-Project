@@ -156,6 +156,7 @@ export default {
   }
   .list {
     padding: 0.27rem;
+    margin-bottom: 1rem;
     .listItem {
       border-bottom: 1px solid #f2f2f2;
       height: 1.3rem;

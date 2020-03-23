@@ -15,7 +15,9 @@ const upload = multer({
   dest: path.join(__dirname, '../', 'uploads')
 }) 
 
-const host = 'http://localhost:3000'
+const {host2:host}= require('../utils/getLocalIp')
+
+
 
 // 读取 token 签名
 // 读取取token的加密文件
@@ -246,7 +248,7 @@ router.post('/getUserData',decodeJwt(), async (req, res) => {
 // 上传用户头像
 router.post('/uploadAvatar', decodeJwt(), upload.single('file'),async(req, res) => {
   assert(req.file, '413','上传失败')
-  let path = `${host}/uploads/${req.file.filename}`
+  let path = `/uploads/${req.file.filename}`
   try {
     await User.updateOne({_id:req._id},{avatar: path})
   } catch (err) {
@@ -257,7 +259,7 @@ router.post('/uploadAvatar', decodeJwt(), upload.single('file'),async(req, res) 
       code: 0,
       msg: 'ok',
       data: {
-        path
+        path:`${host}${path}`
       }
     })
   }

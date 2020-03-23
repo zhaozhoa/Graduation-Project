@@ -14,7 +14,9 @@ const upload = multer({
   dest: path.join(__dirname, '../', 'uploads')
 })
 
-const host = 'http://localhost:3000'
+const {
+  host2: host
+} = require('../utils/getLocalIp')
 
 // 读取 token 签名
 // 读取取token的加密文件
@@ -42,7 +44,7 @@ router.post('/publise', decodeJwt(), upload.array('file', 5), async (req, res) =
   let img = []
   if (req.files.length !== 0) {
     req.files.forEach(item => {
-      img.push(`${host}/uploads/${item.filename}`)
+      img.push(`/uploads/${item.filename}`)
     })
   }
   let {
@@ -103,6 +105,12 @@ router.post('/getInfoList', decodeJwt(), async (req, res) => {
       description:0
     }).limit(parseInt(showCount)).skip((parseInt(currentPage) - 1) * showCount).sort({'createdTime': -1})
 
+    result.forEach(item => {
+      if (item.img.length !== 0) {
+       item.img = item.img.map(itm => `${host}${itm}`)
+      }
+    })
+    
     res.json({
       code: 0,
       total: count,
@@ -115,7 +123,7 @@ router.post('/getInfoList', decodeJwt(), async (req, res) => {
 
 })
 
-// 查询单个用户发布的信息
+// 查询单个用户发布的信息详情
 router.post('/getInfo', async (req, res) => {
   let {_id} = req.body
 
@@ -135,6 +143,12 @@ router.post('/getInfo', async (req, res) => {
     }
   ])
 
+  result.forEach(item => {
+    if (item.img.length !== 0) {
+      item.img = item.img.map(itm => `${host}${itm}`)
+    }
+  })
+  
   let tempObj = result[0].userInfo[0]
   
   for (const key in tempObj) {
@@ -168,7 +182,7 @@ router.post('/modifyInfo', decodeJwt(), upload.array('file', 5), async (req, res
   } = req.body
   if (req.files.length !== 0) {
     req.files.forEach(item => {
-      img.push(`${host}/uploads/${item.filename}`)
+      img.push(`/uploads/${item.filename}`)
     })
   }
   try {
@@ -232,8 +246,13 @@ router.post('/sellInfoList', async (req, res) => {
          $limit: showCount
        },
      ])
+     console.log(result);
+     
     result.forEach(item => {
       item.nickName = item.nickName.map(item2 => item2.nickName)[0]
+      if (item.img.length !== 0) {
+        item.img = item.img.map( itm => `${host}${itm}`)
+      }
     })
      res.json({
        code: 0,
