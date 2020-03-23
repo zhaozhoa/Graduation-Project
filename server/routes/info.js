@@ -106,7 +106,7 @@ router.post('/getInfoList', decodeJwt(), async (req, res) => {
     }).limit(parseInt(showCount)).skip((parseInt(currentPage) - 1) * showCount).sort({'createdTime': -1})
 
     result.forEach(item => {
-      if (item.img.length !== 0) {
+      if (item.img && item.img.length !== 0) {
        item.img = item.img.map(itm => `${host}${itm}`)
       }
     })
@@ -144,7 +144,7 @@ router.post('/getInfo', async (req, res) => {
   ])
 
   result.forEach(item => {
-    if (item.img.length !== 0) {
+    if (item.img && item.img.length !== 0) {
       item.img = item.img.map(itm => `${host}${itm}`)
     }
   })
@@ -249,11 +249,9 @@ router.post('/sellInfoList', async (req, res) => {
          $limit: showCount
        },
      ])
-     console.log(result);
-     
     result.forEach(item => {
       item.nickName = item.nickName.map(item2 => item2.nickName)[0]
-      if (item.img.length !== 0) {
+      if (item.img && item.img.length !== 0) {
         item.img = item.img.map( itm => `${host}${itm}`)
       }
     })
