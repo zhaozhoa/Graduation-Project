@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       value: "",
-      searchType: ["贸易商机", "投资项目", "采购需求", "产品", "公司"],
+      searchType: ["出售商品", "采购需求", "校园吐槽", "产品", "公司"],
       selectType: "贸易商机",
       ind: ""
     };

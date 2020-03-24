@@ -30,6 +30,14 @@ const infoRouter = [{
       title: '出售消息详情'
     },
   },
+  {
+    path: '/searchList/:key',
+    name: 'searchList',
+    component: () => import('../views/info/searchList.vue'),
+    meta: {
+      title: '搜索列表页'
+    },
+  },
 ]
 
 export default infoRouter

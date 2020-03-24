@@ -58,6 +58,11 @@
   sellInfoList(params) {
     return axiosPost('sellInfoList', params)
   },
+
+  // 全局搜索
+  searchList(params) {
+    return axiosPost('searchList', params)
+  }
  }
 
  export default infoApi

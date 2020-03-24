@@ -23,7 +23,7 @@
       shape="round"
       class="search"
       background="rgba(0,0,0,0)"
-      @focus="toSearchPaeg"
+      @search="onSearch"
     />
     <div class="container">
       <div class="linkWapper wapper3">
@@ -116,6 +116,18 @@ export default {
       this.$router.push({
         name
       })
+    },
+    onSearch() {
+      if (!this.value) {
+        this.$toast('请输入关键字')
+        return
+      }
+
+      this.$router.push({
+        name: 'searchList',
+        params: {key: this.value}
+      })
+      
     },
     getTradeDetail(TRADE_ID) {
       this.$router.push({
