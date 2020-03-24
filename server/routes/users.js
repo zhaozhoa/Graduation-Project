@@ -156,6 +156,7 @@ router.post('/login',  async (req, res) => {
   }, secret, {
     expiresIn: '1h'
   })
+  data.avatar = host + data.avatar
   res.json({
     code: 0,
     msg: 'ok',
