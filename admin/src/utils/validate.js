@@ -1,5 +1,6 @@
 /**
  * Created by PanJiaChen on 16/11/18.
+ * Changed by zhao on 2020-03/25
  */
 
 /**
@@ -15,6 +16,6 @@ export function isExternal(path) {
  * @returns {Boolean}
  */
 export function validUsername(str) {
-  const valid_map = ['admin', 'editor']
+  const valid_map = ['zhaozhao', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
 }

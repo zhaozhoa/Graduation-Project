@@ -1,6 +1,6 @@
-module.exports = option => {
+const User = require('../models/user')
+module.exports = (Model=User) => {
   const jwt = require('jsonwebtoken')
-  const User = require('../models/user')
   const fs = require('fs')
   const assert = require('http-assert')
   let secret = fs.readFileSync(__dirname + '../../.secret').toString()
@@ -12,7 +12,7 @@ module.exports = option => {
         tokenData = jwt.verify(token.split(' ').pop(), secret)
         let {
           _id
-        } = await User.findById(tokenData._id)
+        } = await Model.findById(tokenData._id)
         req._id = _id
         assert(req._id, 401, '请先登陆')
         next()
