@@ -151,13 +151,13 @@ export default {
             }
           );
           if (data.code === 0) {
-          // 登陆成功 保存token
+          // 登录成功 保存token
           this.$ls.set('token',data.data.token,1000*60*60)
           // 将用户信息存到 vuex
           
           this.$ls.set('user', data.data,60 * 60 * 1000)
           this.$store.commit("changeUserData", data.data);
-          this.$toast.success('登陆成功')
+          this.$toast.success('登录成功')
           setTimeout(() => {
           this.$router.push({name:'home'});
           }, 1000);

@@ -18,7 +18,38 @@ export function getInfo(token) {
 
 export function logout() {
   return request({
-    url: '/vue-admin-template/user/logout',
+    url: '/admin/logout',
     method: 'post'
+  })
+}
+
+export function getAllUser() {
+  return request({
+    url: '/admin/allAdmin',
+    method: 'post'
+  })
+}
+
+export function modifyUserInfo(data) {
+  return request({
+    url: '/admin/modifyUserInfo',
+    method: 'post',
+    data
+  })
+}
+
+export function addUser(data) {
+  return request({
+    url: '/admin/adduser',
+    method: 'post',
+    data
+  })
+}
+
+export function deluser(data) {
+  return request({
+    url: '/admin/delUser',
+    method: 'post',
+    data
   })
 }

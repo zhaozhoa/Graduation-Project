@@ -1,15 +1,13 @@
-import Cookies from 'js-cookie'
 
-const TokenKey = 'vue_admin_template_token'
-
+// 在 cookie 中存储 token
 export function getToken() {
-  return Cookies.get(TokenKey)
+  return sessionStorage.getItem('TokenKey')
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  return sessionStorage.setItem('TokenKey', token)
 }
 
 export function removeToken() {
-  return Cookies.remove(TokenKey)
+  return sessionStorage.removeItem('TokenKey')
 }

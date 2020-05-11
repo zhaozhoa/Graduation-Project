@@ -14,19 +14,19 @@ module.exports = (Model=User) => {
           _id
         } = await Model.findById(tokenData._id)
         req._id = _id
-        assert(req._id, 401, '请先登陆')
+        assert(req._id, 401, '请先登录')
         next()
       } catch (error) {
         console.log(error);
         
         res.status(403).json({
           code: 1,
-          msg: '登陆失效，请重新登陆'
+          msg: '登录失效，请重新登录'
         })
         return
       }
     } else {
-      assert(false, 401, '没有登陆')
+      assert(false, 401, '没有登录')
     }
   }
 }

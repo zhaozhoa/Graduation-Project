@@ -40,7 +40,7 @@ const userApi = {
   register(params) {
     return axiosPost('register', params)
   },
-  // 获取登陆验证图片
+  // 获取登录验证图片
   getVerificationPic() {
     return axiosGet('verificationPic')
   },

@@ -33,7 +33,7 @@ const actions = {
     const { username, password } = userInfo
     // 返回 promise
     return new Promise((resolve, reject) => {
-      // 调用登陆的 axios
+      // 调用登录的 axios
       login({ account: username.trim(), password: password }).then(response => {
         const { data } = response
         console.log(data)

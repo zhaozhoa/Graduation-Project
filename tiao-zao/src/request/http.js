@@ -42,7 +42,7 @@ const errorHandle = (status, other) => {
   switch (status) {
     // 401: 未登录状态，跳转登录页
     case 401:
-      tip('您还没有登陆，请先登陆')
+      tip('您还没有登录，请先登录')
       setTimeout(() => {
         toLogin();
         
