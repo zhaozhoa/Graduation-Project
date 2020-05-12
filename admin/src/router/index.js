@@ -60,12 +60,35 @@ export const constantRoutes = [
   {
     path: '/info',
     component: Layout,
+    redirect: '/info/buy',
+    meta: {
+      title: '发布信息管理',
+      icon: 'form'
+    },
     children: [
       {
-        path: 'index',
-        name: 'info',
-        component: () => import('@/views/info/index'),
-        meta: { title: '发布信息管理', icon: 'form' }
+        path: 'sell',
+        name: 'sell',
+        component: () => import('@/views/info/sell'),
+        meta: { title: '出售商品' }
+      },
+      {
+        path: 'buy',
+        name: 'buy',
+        component: () => import('@/views/info/buy'),
+        meta: { title: '采购需求' }
+      },
+      {
+        path: 'activity',
+        name: 'activity',
+        component: () => import('@/views/info/activity'),
+        meta: { title: '校园活动' }
+      },
+      {
+        path: 'complaints',
+        name: 'complaints',
+        component: () => import('@/views/info/complaints'),
+        meta: { title: '校园吐槽' }
       }
     ]
   },

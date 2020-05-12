@@ -3,6 +3,7 @@ const path = require("path")
 let mongoose = require("mongoose")
 //引入 数据库 Schema
 const Info = require("../models/info")
+const Admin = require("../models/admin")
 const router = express.Router()
 const jwt = require("jsonwebtoken")
 const multer = require("multer")
@@ -276,18 +277,19 @@ router.post("/sellInfoList", async (req, res) => {
 
 // 全局搜索
 router.post("/searchList", async (req, res) => {
-  let { key, currentPage, showCount } = req.body
+  let { key, currentPage, showCount, category } = req.body
   const reg = new RegExp(key, "i")
   // 查询总条数
   const total = await Info.countDocuments({
     $or: [
       {
         title: {
-          $regex: reg
-        }
-      }
+          $regex: reg,
+        },
+      },
     ],
-    status: 1
+    status: 1,
+    category,
   })
 
   // 分页查询
@@ -301,32 +303,33 @@ router.post("/searchList", async (req, res) => {
           $or: [
             {
               title: {
-                $regex: reg
-              }
-            }
+                $regex: reg,
+              },
+            },
           ],
-          status: 1
-        }
+          status: 1,
+          category,
+        },
       },
       {
         $lookup: {
-          from: "users", // 数据库关联的表名
-          localField: "owner_id", // 外键
-          foreignField: "_id", // 关联表的主键
-          as: "nickName"
-        }
+          from: 'users', // 数据库关联的表名
+          localField: 'owner_id', // 外键
+          foreignField: '_id', // 关联表的主键
+          as: 'nickName',
+        },
       },
       {
         $sort: {
-          createdTime: -1
-        }
+          createdTime: -1,
+        },
       },
       {
-        $skip: (currentPage - 1) * showCount
+        $skip: (currentPage - 1) * showCount,
       },
       {
-        $limit: showCount
-      }
+        $limit: showCount,
+      },
     ])
 
     let categories = ['出售商品', '采购需求', '校园活动', '校园吐槽']
@@ -350,4 +353,32 @@ router.post("/searchList", async (req, res) => {
   }
 })
 
+// 修改消息状态
+router.post("/modifyStatus", decodeJwt(Admin), async (req, res) => {
+  const {_id} = req.body
+  try {
+    await Info.updateOne({_id}, {status: 0})
+    res.json({
+      code: 0,
+      msg: "ok",
+    })
+    
+  } catch (err) {
+    assert(false, 500, '服务器繁忙')
+  }
+})
+
+// 删除消息
+router.post("/delInfo", decodeJwt(Admin), async (req, res) => {
+  const { _id } = req.body
+  try {
+    await Info.remove({ _id })
+    res.json({
+      code: 0,
+      msg: "ok",
+    })
+  } catch (err) {
+    assert(false, 500, "服务器繁忙")
+  }
+})
 module.exports = router
